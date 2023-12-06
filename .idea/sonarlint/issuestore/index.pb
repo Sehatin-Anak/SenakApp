@@ -1,6 +1,4 @@
 
-i
-9app/src/main/java/com/example/senakapp/ui/MainActivity.kt,6\2\62cb4226cf3e16c57b2a65c32650ad2d7fb3bb21
 A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 D
@@ -58,3 +56,11 @@ P
 Q.idea/sonarlint/securityhotspotstore/d/b/dbcff70658daf80b53ce624f6adcaa529df5ed8d,e\c\ec4317fc3093e8c354ef226260d7fd566c3957fb
 w
 G.idea/sonarlint/issuestore/d/b/dbcff70658daf80b53ce624f6adcaa529df5ed8d,5\9\597ee72a8e9f089a0f26608d0d77229bc4510a37
+b
+2app/src/main/java/com/example/senakapp/SenakApp.kt,a\c\ac074d7a25f7b5ba585d32e5eb7e22a2a4f67598
+f
+6app/src/main/java/com/example/senakapp/MainActivity.kt,f\f\ff165466dfe6f9fda4d3d2afd25da1dff73a9d58
+s
+Capp/src/main/java/com/example/senakapp/ui/screen/home/HomeScreen.kt,a\0\a0ebcd836578d0bc30b72e14aa58ffb3db9e07c1
+n
+>app/src/main/java/com/example/senakapp/ui/components/Banner.kt,0\a\0a9bd21c0283ca70f436afa11a69a4d543fcf19c
