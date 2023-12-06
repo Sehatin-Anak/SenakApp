@@ -75,6 +75,10 @@ dependencies {
     /*Font*/
     implementation("androidx.compose.ui:ui-text-google-fonts:1.5.4")
 
+    /*Coil*/
+    implementation("io.coil-kt:coil-svg:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
 
     //Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48.1")

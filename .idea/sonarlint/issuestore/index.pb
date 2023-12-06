@@ -12,8 +12,6 @@ Happ/src/androidTest/java/com/example/senakapp/ExampleInstrumentedTest.kt,1\7\1
 F
 app/proguard-rules.pro,9\e\9e08934d811afe28fbc77aaa3c0d747b94348db9
 
-Q.idea/sonarlint/securityhotspotstore/6/2/62cb4226cf3e16c57b2a65c32650ad2d7fb3bb21,4\b\4b43c6c2d0ed1ad35bd6caf66630d10c48857109
-
 Q.idea/sonarlint/securityhotspotstore/1/a/1aa12ab680d6c31599907b06dc5b303a554df7d5,e\1\e1734cf3306a959a24fa10532eaee7de1eb509c5
 g
 7app/src/main/java/com/example/senakapp/ui/theme/Type.kt,8\d\8d4881975560b13e404671cf18734aaf9d88706b
@@ -23,8 +21,6 @@ h
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
 h
 8app/src/main/java/com/example/senakapp/ui/theme/Color.kt,1\0\10320050fc97bbe0b5a3184ba84fd47b54e6cee8
-w
-G.idea/sonarlint/issuestore/6/2/62cb4226cf3e16c57b2a65c32650ad2d7fb3bb21,f\c\fcbe419aa740f94e992f3347dd04fcc170fd410a
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 
@@ -64,3 +60,7 @@ s
 Capp/src/main/java/com/example/senakapp/ui/screen/home/HomeScreen.kt,a\0\a0ebcd836578d0bc30b72e14aa58ffb3db9e07c1
 n
 >app/src/main/java/com/example/senakapp/ui/components/Banner.kt,0\a\0a9bd21c0283ca70f436afa11a69a4d543fcf19c
+s
+Capp/src/main/java/com/example/senakapp/ui/components/BannerTrack.kt,e\c\ecc519e72c30201ee7aa507ff7cc23bf6d3afa9c
+p
+@app/src/main/java/com/example/senakapp/ui/components/TitleBar.kt,e\e\ee8b7b1513596870f51de2a7e1469dc92b0f9f4e
