@@ -1,4 +1,4 @@
-package com.example.senakapp.ui.screen
+package com.example.senakapp.ui.screen.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -37,7 +37,7 @@ Image(
     contentDescription ="Senak-Logo",
     modifier = Modifier
 
-        .padding(bottom = 32.dp)
+        .padding(bottom = 64.dp, top = 64.dp)
 )
 
         AuthCard(

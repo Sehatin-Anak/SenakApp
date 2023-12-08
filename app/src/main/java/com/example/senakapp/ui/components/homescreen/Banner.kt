@@ -87,15 +87,16 @@ colors = CardDefaults.cardColors(
                         onClick = { /*TODO*/ },
                         modifier = Modifier
                             .padding(bottom = 8.dp, start = 4.dp, end = 4.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
+                            .fillMaxWidth(),
+
+                        shape = RoundedCornerShape(12.dp),
 
 
 
 
 
                         ) {
-                        Text(text = "Read More")
+                        Text(text = "Read More ➤")
                     }
                 }
                 

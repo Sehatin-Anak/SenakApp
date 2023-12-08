@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -114,6 +115,7 @@ fun HomeContent(modifier: Modifier = Modifier) {
 
 
                     Button(onClick = { /*TODO*/ },
+                        shape = RoundedCornerShape(12.dp)
 
 
                         ) {
@@ -129,7 +131,7 @@ fun HomeContent(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(16.dp)
         )
 
 
