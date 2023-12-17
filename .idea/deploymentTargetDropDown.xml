@@ -6,7 +6,20 @@
         <State />
       </entry>
       <entry key="BiodataScreenPreview">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Imam\.android\avd\Pixel_6_API_30.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2023-12-17T23:38:27.697448Z" />
+        </State>
       </entry>
       <entry key="HomeScreenPreview">
         <State />

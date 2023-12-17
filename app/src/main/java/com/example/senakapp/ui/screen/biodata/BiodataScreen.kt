@@ -3,6 +3,7 @@ package com.example.senakapp.ui.screen.biodata
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -35,9 +36,10 @@ fun BiodataScreen() {
 @Composable
 fun BiodataContent(modifier: Modifier = Modifier) {
     var name by remember { mutableStateOf(TextFieldValue("")) }
-    var old by remember { mutableStateOf(TextFieldValue("1")) }
+    var old by remember { mutableStateOf(TextFieldValue("")) }
     var gender by remember { mutableStateOf(TextFieldValue("")) }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
+    var isDropdownExpandedOld by remember { mutableStateOf(false) }
+    var isDropdownExpandedGender by remember { mutableStateOf(false) }
 
     Column (
          modifier = Modifier
@@ -73,80 +75,174 @@ fun BiodataContent(modifier: Modifier = Modifier) {
 
             OutlinedTextField(
                 value = name,
-                onValueChange = { newText ->
-                    name = newText
-                },
+                onValueChange = { name = it },
+                isError = name.text.length < 3,
                 placeholder = {
                     Text("Nama", fontFamily = signikaFont)
                 },
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             )
 
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+
+
+            ExposedDropdownMenuBox(
+                expanded = isDropdownExpandedOld,
+
+                onExpandedChange = { newValue ->
+                    isDropdownExpandedOld = newValue
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color.Transparent)
             ) {
-                ExposedDropdownMenuBox(
-                    expanded = isDropdownExpanded,
-                    onExpandedChange = { isDropdownExpanded = true },
-                    modifier = Modifier.fillMaxWidth()
+                OutlinedTextField(
+
+                    value = old,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpandedOld)
+                    },
+                    placeholder = {
+                        Text(text = "Umur Anak")
+                    },
+
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+
+                )
+
+                ExposedDropdownMenu(
+                    expanded = isDropdownExpandedOld,
+                    onDismissRequest = {
+                        isDropdownExpandedOld = false
+                    }
                 ) {
-                    OutlinedTextField(
-                        value = old,
-                        onValueChange = {
-
-                        },
-                        placeholder = {
-                            Text("Umur", fontFamily = signikaFont)
-                        },
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpanded)
-                        },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                        modifier = Modifier.fillMaxWidth().padding(16.dp).menuAnchor()
-                    )
-
                     DropdownMenuItem(
-                        text = { Text("1 - 3 Tahun", fontFamily = signikaFont) },
+                        text = {
+                            Text(text = "1 - 3 Tahun")
+                        },
                         onClick = {
-                            old = TextFieldValue("1")
-                            isDropdownExpanded = false
+                            old = TextFieldValue("1 - 3 Tahun")
+                            isDropdownExpandedOld = false
                         }
                     )
-
                     DropdownMenuItem(
-                        text = { Text("4 - 6 Tahun", fontFamily = signikaFont) },
+                        text = {
+                            Text(text = "4 - 6 Tahun")
+                        },
                         onClick = {
-                            old = TextFieldValue("2")
-                            isDropdownExpanded = false
+                            old = TextFieldValue("4 - 6 Tahun")
+                            isDropdownExpandedOld = false
                         }
                     )
-
                     DropdownMenuItem(
-                        text = { Text("7 - 9 Tahun", fontFamily = signikaFont) },
+                        text = {
+                            Text(text = "7 - 9 Tahun")
+                        },
                         onClick = {
-                            old = TextFieldValue("3")
-                            isDropdownExpanded = false
+                            old = TextFieldValue("7 - 9 Tahun")
+                            isDropdownExpandedOld = false
                         }
                     )
                 }
+
             }
 
 
-            OutlinedTextField(
-                value = gender,
-                onValueChange = { newText ->
-                    gender = newText
+            ExposedDropdownMenuBox(
+                expanded = isDropdownExpandedGender,
+
+                onExpandedChange = { newValue ->
+                    isDropdownExpandedGender = newValue
                 },
-                placeholder = {
-                    Text("Jenis Kelamin", fontFamily = signikaFont)
-                },
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+
+                    value = gender,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpandedGender)
+                    },
+                    placeholder = {
+                        Text(text = "Jenis Kelamin")
+                    },
+
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .background(Color.Transparent)
+                )
+
+                ExposedDropdownMenu(
+                    expanded = isDropdownExpandedGender,
+                    onDismissRequest = {
+                        isDropdownExpandedGender = false
+                    }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = "Male")
+                        },
+                        onClick = {
+                            gender = TextFieldValue("Male")
+                            isDropdownExpandedGender = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = "Female")
+                        },
+                        onClick = {
+                            gender = TextFieldValue("Female")
+                            isDropdownExpandedGender = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = "Other")
+                        },
+                        onClick = {
+                            gender = TextFieldValue("Other")
+                            isDropdownExpandedGender = false
+                        }
+                    )
+                }
+
+            }
+
+
+
+
 
             Button(
+
+
+
+
+
                 onClick = {
+
+                    when(old.text){
+                        "1 - 3 Tahun" -> old = TextFieldValue("1")
+                        "4 - 6 Tahun" -> old = TextFieldValue("2")
+                        "7 - 9 Tahun" -> old = TextFieldValue("3")
+                    }
                           Log.d("Old", old.text)
+
+
+
+
+
                     Log.d("Name", name.text)
                     Log.d("Gender", gender.text)
 
@@ -154,7 +250,7 @@ fun BiodataContent(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Min   )
+                    .height(IntrinsicSize.Min)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
