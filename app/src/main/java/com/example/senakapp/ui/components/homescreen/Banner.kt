@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.senakapp.R
+import com.example.senakapp.ui.theme.signikaFont
 
 
 @Composable
@@ -72,7 +73,8 @@ colors = CardDefaults.cardColors(
                         color = Color(android.graphics.Color.parseColor("#FF806E")),
                         modifier = Modifier.padding(top = 10.dp, start = 8.dp),
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = signikaFont
                     )
                     Text(
                         text = subtitle,
@@ -80,7 +82,8 @@ colors = CardDefaults.cardColors(
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 17.sp
+                        fontSize = 17.sp,
+                        fontFamily = signikaFont
                     )
 
                     Button(
@@ -96,7 +99,7 @@ colors = CardDefaults.cardColors(
 
 
                         ) {
-                        Text(text = "Read More ➤")
+                        Text(text = "Read More ➤", fontFamily = signikaFont)
                     }
                 }
                 

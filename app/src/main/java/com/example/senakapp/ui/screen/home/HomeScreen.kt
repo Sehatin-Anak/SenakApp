@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.senakapp.data.RecommendationCard
 import com.example.senakapp.ui.components.carditem.RecommendationCardItem
 import com.example.senakapp.ui.components.homescreen.Banner
+import com.example.senakapp.ui.theme.signikaFont
 
 
 @Composable
@@ -55,6 +56,7 @@ fun HomeContent(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "Sehatin Anak Yuk!",
+            fontFamily = signikaFont,
             fontWeight = FontWeight.SemiBold,
             fontSize = 25.sp,
             color = Color(android.graphics.Color.parseColor("#91C788")),
@@ -75,60 +77,13 @@ fun HomeContent(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        Card(
-            shape = MaterialTheme.shapes.large,
-            modifier = Modifier.size(width = 350.dp, height = 100.dp),
 
-            ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp)
-
-
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    )
-
-                {
-
-                    Column {
-                        Text(text = "Track Gizi",
-                            fontSize =24.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                        )
-
-                        Text(text = "Seminggu Ini",
-                            fontSize =24.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                        )
-
-                    }
-
-
-
-                    Button(onClick = { /*TODO*/ },
-                        shape = RoundedCornerShape(12.dp)
-
-
-                        ) {
-                        Text(text = "View More")
-                    }
-                }
-            }
-        }
 
         Text(text = "Recommendation",
             fontSize =22.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Start,
+            fontFamily = signikaFont,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

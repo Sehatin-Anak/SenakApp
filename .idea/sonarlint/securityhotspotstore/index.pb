@@ -64,12 +64,8 @@ q
 Aapp/src/main/java/com/example/senakapp/data/RecommendationCard.kt,f\0\f06e2cf5f9e8c607cc893bc625cecdba6d99de73
 m
 =app/src/main/java/com/example/senakapp/data/Recommendation.kt,5\f\5fed3d858a6a3f97c7eb838e9a2e97a990b00a95
-n
->app/src/main/java/com/example/senakapp/ui/screen/AuthScreen.kt,7\0\70131ab04cfaca9cf587a72598fca1e7ef13a331
 á
 Wapp/src/main/java/com/example/senakapp/ui/components/carditem/RecommendationCardItem.kt,7\e\7eb47b380202710b98adfdf0cb358e3620f30a86
-v
-Fapp/src/main/java/com/example/senakapp/ui/screen/home/BiodataScreen.kt,1\f\1f8623cb3ab442e9f96471baa717d3ad4aa6058b
 s
 Capp/src/main/java/com/example/senakapp/ui/screen/auth/AuthScreen.kt,6\b\6b1d87999988931e5dc9609320621488614fa662
 y
@@ -79,11 +75,7 @@ Iapp/src/main/java/com/example/senakapp/ui/screen/profile/ProfileScreen.kt,d\3\
 |
 Lapp/src/main/java/com/example/senakapp/ui/components/carditem/ProfileItem.kt,6\7\672ed8341c0c7c4a1b12c5a70109e5388edbf2cf
 Å
-Q.idea/sonarlint/securityhotspotstore/7/0/70131ab04cfaca9cf587a72598fca1e7ef13a331,0\a\0a642fd20f3d0611646d3ebd9634fdfcaba5797d
-Å
 Q.idea/sonarlint/securityhotspotstore/a/c/ac074d7a25f7b5ba585d32e5eb7e22a2a4f67598,0\5\05868465e8aed28a470b02accb91dec5a54ca818
-w
-G.idea/sonarlint/issuestore/7/0/70131ab04cfaca9cf587a72598fca1e7ef13a331,1\a\1ac32fdc39479f741f92f553eb322b6602ba9c71
 w
 G.idea/sonarlint/issuestore/f/f/ff165466dfe6f9fda4d3d2afd25da1dff73a9d58,0\3\03bb14f65f67c51489e7c3ea89160074848a86dc
 Å

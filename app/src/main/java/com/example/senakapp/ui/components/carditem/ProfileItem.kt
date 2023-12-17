@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.senakapp.R
+import com.example.senakapp.ui.theme.signikaFont
 
 @Composable
 fun ProfileItem(image: Int, title: String, contentDesc: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -37,6 +38,8 @@ fun ProfileItem(image: Int, title: String, contentDesc: String, onClick: () -> U
         Image(painter = painterResource(id = image), contentDescription = contentDesc)
         Text(
             text = title,
+            fontFamily = signikaFont,
+            color = Color.Gray,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
                 .width(300.dp)
@@ -52,7 +55,7 @@ fun ProfileItem(image: Int, title: String, contentDesc: String, onClick: () -> U
             Text(
                 text = "➤",
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black,
+                color = Color.Gray,
                 modifier = Modifier
                     .size(24.dp)
                     .background(Color.Transparent, shape = CircleShape)

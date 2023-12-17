@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import com.example.senakapp.R
 import com.example.senakapp.data.Recommendation
 
+import com.example.senakapp.ui.theme.signikaFont
+
 
 @Composable
 fun RecommendationCardItem(recommendation: Recommendation, modifier: Modifier = Modifier) {
@@ -47,10 +49,12 @@ fun RecommendationCardItem(recommendation: Recommendation, modifier: Modifier = 
 
             )
             Text(recommendation.title,
+                fontFamily = signikaFont,
 
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
