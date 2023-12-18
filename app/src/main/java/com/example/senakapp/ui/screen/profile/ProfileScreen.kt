@@ -39,8 +39,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.senakapp.R
 import com.example.senakapp.ui.components.carditem.ProfileItem
+import com.ramcosta.composedestinations.annotation.Destination
 
-
+@Destination(route = "profile")
 @Composable
 fun ProfileScreen() {
     ProfileContent()

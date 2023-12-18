@@ -36,19 +36,18 @@ import com.example.senakapp.ui.theme.signikaFont
 fun Banner(
     title: String,
     subtitle: String,
-    modifier: Modifier = Modifier.clip(MaterialTheme.shapes.large).size(width = 250.dp, height = 150.dp)
+    modifier: Modifier = Modifier.clip(MaterialTheme.shapes.large)
+        .size(width = 250.dp, height = 150.dp),
+
+
+
 ) {
 
 
 
     Card(
-colors = CardDefaults.cardColors(
-
-
-),
+colors = CardDefaults.cardColors(),
         modifier = Modifier.size(width = 300.dp, height = 150.dp),
-
-
 
 
     ) {
@@ -87,16 +86,15 @@ colors = CardDefaults.cardColors(
                     )
 
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+
+
+
+                        },
                         modifier = Modifier
                             .padding(bottom = 8.dp, start = 4.dp, end = 4.dp)
                             .fillMaxWidth(),
-
                         shape = RoundedCornerShape(12.dp),
-
-
-
-
 
                         ) {
                         Text(text = "Read More ➤", fontFamily = signikaFont)
@@ -127,9 +125,11 @@ colors = CardDefaults.cardColors(
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun BannerPreview() {
-    Banner(title = "ARTICLE",
+    Banner(
+        title = "ARTICLE",
         subtitle = "Processed Foods is it healthy ?",
 
-        modifier = Modifier.padding(8.dp))
+        modifier = Modifier.padding(8.dp)
+    )
 }
 

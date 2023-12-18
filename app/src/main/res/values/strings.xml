@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SenakApp</string>
+    <string name="home_screen">Home</string>
+    <string name="profile_screen">Profile</string>
+    <string name="recipes_screen">Recipes</string>
+    <string name="articles_screen">Article</string>
 </resources>

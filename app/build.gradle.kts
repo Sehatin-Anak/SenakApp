@@ -1,13 +1,22 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
-
+kotlin {
+    sourceSets {
+        debug {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        release {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
+        }
+    }
+}
 android {
     namespace = "com.example.senakapp"
     compileSdk = 34
@@ -45,12 +54,18 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.5"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    applicationVariants.all {
+        addJavaSourceFoldersToModel(
+            File(buildDir, "generated/ksp/$name/kotlin")
+        )
     }
 }
 
@@ -84,4 +99,14 @@ dependencies {
     implementation ("com.google.dagger:hilt-android:2.48.1")
     kapt("com.google.dagger:hilt-android-compiler:2.48.1")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+
+    /*GoogleSignAuth*/
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    /*NavigationDestinations*/
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation ("io.github.raamcosta.compose-destinations:core:1.9.55")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.55")
+
 }

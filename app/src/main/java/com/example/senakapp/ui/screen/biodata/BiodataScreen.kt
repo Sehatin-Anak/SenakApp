@@ -25,7 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.senakapp.R
 import com.example.senakapp.ui.theme.signikaFont
+import com.ramcosta.composedestinations.annotation.Destination
 
+
+@Destination(route = "biodata")
 @Composable
 fun BiodataScreen() {
     BiodataContent()

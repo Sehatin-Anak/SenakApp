@@ -18,14 +18,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.senakapp.R
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+
+@Destination
 @Composable
-fun AuthScreen() {
-    AuthContent()
+fun AuthScreen(navigator: DestinationsNavigator) {
+    AuthContent(navigator = navigator)
 }
 
 @Composable
-fun AuthContent(modifier: Modifier = Modifier) {
+fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -38,27 +42,32 @@ Image(
     modifier = Modifier
 
         .padding(bottom = 64.dp, top = 64.dp)
-)
 
+
+)
         AuthCard(
             title = "Login with Facebook",
-            image = R.drawable.fb_logo,
+            image = R.drawable.fb_logo
 
 
-        )
+        ) {
+            navigator.navigate("profile")
+        }
         Spacer(modifier = Modifier.padding(12.dp))
 
         AuthCard(
-            title = "Login with Goggle",
+            title = "Login with Google",
             image = R.drawable.google_logo,
 
-        )
+            ) {
+            navigator.navigate("home")
+        }
 
     }
 }
 
 @Composable
-fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier){
+fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, onClick: () -> Unit){
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,7 +85,8 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier){
         {
             Image(painter = painterResource(id = image), contentDescription = "Auth Image", modifier = Modifier
 
-                .size(60.dp).padding(4.dp)
+                .size(60.dp)
+                .padding(4.dp)
 
             )
             Spacer(modifier = Modifier.padding(8.dp))
@@ -91,5 +101,7 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier){
 @Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_4)
 @Composable
 fun AuthScreenPreview() {
-    AuthScreen()
+
+
+
 }
