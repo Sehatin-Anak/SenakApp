@@ -86,15 +86,9 @@ Q.idea/sonarlint/securityhotspotstore/a/0/a0ebcd836578d0bc30b72e14aa58ffb3db9e07
 Q.idea/sonarlint/securityhotspotstore/a/0/a07ecf4307ced223d91efd41322016e5612f4687,f\b\fb30421a93402c1de4ec240d46d84e83a4c67ec2
 \
 ,.idea/inspectionProfiles/Project_Default.xml,4\9\496a238a6afa168dbaf6efd37bb459331589579c
-s
-Capp/src/main/java/com/example/senakapp/data/BottomNavigationItem.kt,5\5\550d8d01729890fd9095ee81d2548171dc471eb4
 x
 Happ/src/main/java/com/example/senakapp/ui/navigation/BottomNavigation.kt,6\6\6651ea66c4eaeaf75db773809fddb3520c42d7b5
-p
-@app/src/main/java/com/example/senakapp/ui/screen/RecipeScreen.kt,0\f\0f44bff57b8f6bc854beb8e9328cd11a8457c1eb
 x
 Happ/src/main/java/com/example/senakapp/ui/screen/recipes/RecipeScreen.kt,c\1\c19141df658cb4921013f95c08d19a6b3d125d53
-l
-<app/src/main/java/com/example/senakapp/ui/screen/articles.kt,f\b\fb148940e367bcf4dbf5f1a93a31eecd74328e35
 {
 Kapp/src/main/java/com/example/senakapp/ui/screen/articles/ArticlesScreen.kt,5\3\535c4e3942fa6e22b25d59541c9fcce7e5d127c3

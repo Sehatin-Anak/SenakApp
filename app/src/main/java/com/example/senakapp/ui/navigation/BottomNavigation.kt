@@ -67,34 +67,37 @@ fun BottomBar(
     val currentDestination: Destination? = navController.appCurrentDestinationAsState().value
         ?: NavGraphs.root.startAppDestination
 
-    NavigationBar {
-        BottomBarDestination.values().forEach { destination ->
-            NavigationBarItem(
-                selected = currentDestination == destination.direction,
-                onClick = {
-                    navController.navigateTo(destination.direction) {
-                        launchSingleTop = true
-                    }
-                },
-                icon = {
 
-                    destination.icon?.let {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = null
-                        )
-                    } ?: destination.iconResId?.let {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = it),
-                            contentDescription = null
-                        )
-                    }
+    val isBottomBarVisible = BottomBarDestination.values().any { it.direction == currentDestination }
 
-                },
-                label = {
-                    Text(text = stringResource(id = destination.label))
-                }
-            )
+    if (isBottomBarVisible) {
+        NavigationBar {
+            BottomBarDestination.values().forEach { destination ->
+                NavigationBarItem(
+                    selected = currentDestination == destination.direction,
+                    onClick = {
+                        navController.navigateTo(destination.direction) {
+                            launchSingleTop = true
+                        }
+                    },
+                    icon = {
+                        destination.icon?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = null
+                            )
+                        } ?: destination.iconResId?.let {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = it),
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    label = {
+                        Text(text = stringResource(id = destination.label))
+                    }
+                )
+            }
         }
     }
 }

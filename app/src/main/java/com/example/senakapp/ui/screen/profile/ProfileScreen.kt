@@ -38,18 +38,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.senakapp.R
-import com.example.senakapp.ui.components.carditem.ProfileItem
-import com.ramcosta.composedestinations.annotation.Destination
+import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
+import com.example.senakapp.ui.theme.signikaFont
 
-@Destination(route = "profile")
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+@Destination
 @Composable
-fun ProfileScreen() {
-    ProfileContent()
+fun ProfileScreen(navigator: DestinationsNavigator?) {
+    ProfileContent(navigator = navigator)
 
 }
 
 @Composable
-fun ProfileContent() {
+fun ProfileContent(navigator: DestinationsNavigator?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -107,18 +110,81 @@ fun ProfileContent() {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            ProfileItem(
-                image = R.drawable.logout,
-                title = "Logout",
-                contentDesc = "Logout",
-onClick = {
-                    Log.d("ProfileScreen", "Logout")
-                }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .clickable {
+                        Log.d("ProfileScreen", "Clicked")
+                        navigator?.navigate(AuthScreenDestination)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logout),
+                    contentDescription = "Logout",
+                    modifier = Modifier
+                )
 
-            )
+                Text(
+                    text = "Logout",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 17.sp,
+                    fontFamily = signikaFont,
+                    color = Color.Black,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp)
+
+                )
+
+                Text(
+                    text = ">",
+                    fontSize = 20.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp)) // Jarak antara gambar profil dan Card
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .clickable {
+                        Log.d("ProfileScreen", "Clicked")
+                        navigator?.navigate(AuthScreenDestination)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logout),
+                    contentDescription = "Logout",
+                    modifier = Modifier
+                )
+
+                Text(
+                    text = "Logout",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 17.sp,
+                    fontFamily = signikaFont,
+                    color = Color.Black,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp)
+
+                )
+
+                Text(
+                    text = ">",
+                    fontSize = 20.sp
+                )
+            }
         }
 
-        }
+
+    }
 
 
 
@@ -134,5 +200,5 @@ onClick = {
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen()
+    ProfileScreen(navigator = null)
 }
