@@ -72,8 +72,6 @@ y
 Iapp/src/main/java/com/example/senakapp/ui/screen/biodata/BiodataScreen.kt,1\d\1d56f65708141a1ad0c2becbd33bcf4c47b0344c
 y
 Iapp/src/main/java/com/example/senakapp/ui/screen/profile/ProfileScreen.kt,d\3\d39c5569c4548e86e53c65b92ae970370385bc16
-|
-Lapp/src/main/java/com/example/senakapp/ui/components/carditem/ProfileItem.kt,6\7\672ed8341c0c7c4a1b12c5a70109e5388edbf2cf
 Å
 Q.idea/sonarlint/securityhotspotstore/a/c/ac074d7a25f7b5ba585d32e5eb7e22a2a4f67598,0\5\05868465e8aed28a470b02accb91dec5a54ca818
 w
