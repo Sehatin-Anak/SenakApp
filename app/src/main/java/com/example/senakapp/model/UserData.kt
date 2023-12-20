@@ -1,4 +1,4 @@
-package com.example.senakapp.data
+package com.example.senakapp.model
 
 import android.net.Uri
 import android.os.Parcelable

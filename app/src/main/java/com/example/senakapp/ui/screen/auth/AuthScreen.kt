@@ -1,5 +1,6 @@
 package com.example.senakapp.ui.screen.auth
 
+
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
@@ -26,9 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.senakapp.R
-import com.example.senakapp.data.UserData
-import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
 import com.example.senakapp.ui.screen.destinations.HomeScreenDestination
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -36,11 +36,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.runBlocking
 
 @RootNavGraph(start = true)
 @Destination
@@ -54,6 +54,7 @@ fun AuthScreen(navigator: DestinationsNavigator) {
 
 @Composable
 fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -87,8 +88,9 @@ Image(
 
 @Composable
 fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator: DestinationsNavigator){
+    val viewModel = hiltViewModel<AuthViewModel>()
 
-    val justLoggedOut = remember { mutableStateOf(false) }
+
 
     val context = LocalContext.current
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -102,9 +104,11 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
 
     val mGsoClient = GoogleSignIn.getClient(context, gso)
 
+
+
     val lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
 
-    if (lastSignedInAccount != null && !justLoggedOut.value) {
+    if (lastSignedInAccount != null) {
         // Pengguna sudah masuk sebelumnya dan bukan setelah logout
         Log.d("YourActivityLasSignin", "signInResult:success code=$lastSignedInAccount")
         navigator?.navigate(HomeScreenDestination())
@@ -120,6 +124,9 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
             if (data != null && result.resultCode == Activity.RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(task, navigator)
+                runBlocking {
+                    viewModel.saveToken(task.result.idToken!!)
+                }
             }
         } else {
             Log.d("YourActivity", "signInResult:failed code=" + result.resultCode)
@@ -154,11 +161,17 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
 
     }
 
+    viewModel.getToken()?.let {
+        Log.d("YourActivityViewModel", "signInResult:success token=" + it)
+    }
+
 
 
 }
 private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>, navigator: DestinationsNavigator) {
+
     try {
+
         val account = completedTask.getResult(ApiException::class.java)
         Log.d("YourActivity", "signInResult:success code=" + account)
         account.displayName?.let {
@@ -166,6 +179,8 @@ private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>, navigat
             Log.d("YourActivity", "signInResult:success email=" + account.email)
             Log.d("YourActivity", "signInResult:success id=" + account.id)
             Log.d("YourActivity", "signInResult:success idToken=" + account.idToken)
+
+
 
 
         }

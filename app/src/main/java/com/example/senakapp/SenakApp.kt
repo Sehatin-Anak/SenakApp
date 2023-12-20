@@ -6,11 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.example.senakapp.ui.navigation.BottomBar
 import com.example.senakapp.ui.screen.NavGraphs
-import com.example.senakapp.ui.screen.home.HomeScreen
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

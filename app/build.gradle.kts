@@ -125,6 +125,13 @@ dependencies {
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
 
 
+    /* Retrofit + Moshi Converter*/
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+
 
 
 

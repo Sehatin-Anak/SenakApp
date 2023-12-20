@@ -1,5 +1,6 @@
 package com.example.senakapp.ui.screen.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -36,20 +36,21 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.senakapp.R
 import com.example.senakapp.data.RecommendationCard
-import com.example.senakapp.data.UserData
 import com.example.senakapp.ui.components.carditem.RecommendationCardItem
-import com.example.senakapp.ui.components.homescreen.Banner
 import com.example.senakapp.ui.screen.destinations.ArticlesScreenDestination
-import com.example.senakapp.ui.screen.destinations.ProfileScreenDestination
+import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
 
 
 @Destination
@@ -57,21 +58,42 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun HomeScreen(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
 
 
-    HomeContent(navigator = navigator )
+    HomeContent(navigator = navigator)
 
 
 }
 
 
 
+@SuppressLint("FlowOperatorInvokedInComposition", "RestrictedApi")
 @Composable
 fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?) {
 
+    val viewModel = hiltViewModel<HomeViewModel>()
+
     val TAG = "HomeScreenAuth"
 
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(ContextCompat.getString(LocalContext.current, R.string.server_client_id))
+        .requestEmail()
+        .build()
     val account: GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(LocalContext.current)!!
+    val mGoogleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
 
     Log.d(TAG, "HomeContent: ${account.idToken}")
+    if (viewModel.getToken() != account.idToken){
+        mGoogleSignInClient.signOut()
+        navigator?.navigate(AuthScreenDestination(),
+            builder =  {
+                popUpTo(AuthScreenDestination.baseRoute)
+            }
+
+        )
+
+
+
+    }
+
 
 
     Column(
@@ -215,6 +237,6 @@ fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?
 
 @Composable
 fun HomeScreenPreview() {
-    HomeContent(navigator = null)
+//
 
 }

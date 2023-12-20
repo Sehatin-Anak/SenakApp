@@ -1,7 +1,5 @@
 package com.example.senakapp.data
 
-import com.example.senakapp.R
-
 object RecommendationCard {
 
     val recommendationCard = listOf<Recommendation>(

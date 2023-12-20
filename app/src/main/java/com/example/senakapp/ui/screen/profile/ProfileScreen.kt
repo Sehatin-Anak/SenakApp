@@ -36,14 +36,12 @@ import androidx.core.content.ContextCompat.getString
 import coil.compose.AsyncImage
 import com.example.senakapp.R
 import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
-import com.example.senakapp.ui.screen.destinations.HomeScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.popUpTo
 
 @Destination
 @Composable
@@ -161,14 +159,6 @@ fun ProfileContent(navigator: DestinationsNavigator?) {
                                 }
                             }
 
-                        mGoogleSignInClient.revokeAccess()
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Log.d("ProfileScreen", "Revoke Access Complete")
-                                } else {
-                                    Log.d("ProfileScreen", "Revoke Access Failed: ${task.exception?.message}")
-                                }
-                            }
 
                        navigator?.navigate(AuthScreenDestination(),
 

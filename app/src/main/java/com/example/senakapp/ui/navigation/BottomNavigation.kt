@@ -11,7 +11,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
@@ -21,7 +20,6 @@ import com.example.senakapp.ui.screen.appCurrentDestinationAsState
 import com.example.senakapp.ui.screen.destinations.ArticlesScreenDestination
 import com.example.senakapp.ui.screen.destinations.Destination
 import com.example.senakapp.ui.screen.destinations.HomeScreenDestination
-
 import com.example.senakapp.ui.screen.destinations.ProfileScreenDestination
 import com.example.senakapp.ui.screen.destinations.RecipesScreenDestination
 import com.example.senakapp.ui.screen.startAppDestination
