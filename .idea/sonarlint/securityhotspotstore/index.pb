@@ -90,3 +90,9 @@ x
 Happ/src/main/java/com/example/senakapp/ui/screen/recipes/RecipeScreen.kt,c\1\c19141df658cb4921013f95c08d19a6b3d125d53
 {
 Kapp/src/main/java/com/example/senakapp/ui/screen/articles/ArticlesScreen.kt,5\3\535c4e3942fa6e22b25d59541c9fcce7e5d127c3
+v
+Fapp/src/main/java/com/example/senakapp/ui/screen/auth/AuthViewModel.kt,5\8\582231acd5d71c61e789945fdad66cc530f3091f
+g
+7app/src/main/java/com/example/senakapp/data/UserData.kt,6\d\6dd794858803cd67af1ab84ec2e1a0f7cca04758
+i
+9app/src/main/java/com/example/senakapp/MainApplication.kt,5\2\52367bc7f36c2da718b81fd4b11b971a371d3dce

@@ -4,4 +4,6 @@
     <string name="profile_screen">Profile</string>
     <string name="recipes_screen">Recipes</string>
     <string name="articles_screen">Article</string>
+    <string name="server_client_id">441965259232-ndbstmonvg9mdphp3mqbthvq2d0bgprv.apps.googleusercontent.com</string>
+    <string name="auth_client_id">441965259232-emhqtmekekog8u8325jeg5u04gdl1fdf.apps.googleusercontent.com</string>
 </resources>

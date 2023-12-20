@@ -25,10 +25,20 @@
         <State />
       </entry>
       <entry key="MainActivity">
-        <State />
-      </entry>
-      <entry key="ProfileScreenPreview">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Imam\.android\avd\Pixel_2_XL_API_33.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2023-12-19T06:20:56.462241300Z" />
+        </State>
       </entry>
     </value>
   </component>

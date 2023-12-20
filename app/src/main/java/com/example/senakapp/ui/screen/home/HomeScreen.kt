@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.senakapp.R
 import com.example.senakapp.data.RecommendationCard
+import com.example.senakapp.data.UserData
 import com.example.senakapp.ui.components.carditem.RecommendationCardItem
 import com.example.senakapp.ui.components.homescreen.Banner
 import com.example.senakapp.ui.screen.destinations.ArticlesScreenDestination
@@ -45,13 +46,13 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
-@RootNavGraph(start = true)
+
 @Destination
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
 
 
-    HomeContent(navigator = navigator)
+    HomeContent(navigator = navigator )
 
 
 }

@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp") version "1.9.20-1.0.14"
 }
@@ -42,6 +43,15 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+        debug {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -72,6 +82,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -103,6 +114,15 @@ dependencies {
 
     /*GoogleSignAuth*/
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.github.stevdza-san:OneTapCompose:1.0.11")
+    implementation("androidx.credentials:credentials:1.3.0-alpha01")
+    // optional - needed for credentials support from play services, for devices running
+    // Android 13 and below.
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
+
+
+
+
 
     /*NavigationDestinations*/
     implementation("androidx.navigation:navigation-compose:2.7.6")
