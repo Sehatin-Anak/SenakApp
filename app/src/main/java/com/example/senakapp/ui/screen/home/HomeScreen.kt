@@ -1,5 +1,6 @@
 package com.example.senakapp.ui.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +44,8 @@ import com.example.senakapp.ui.components.homescreen.Banner
 import com.example.senakapp.ui.screen.destinations.ArticlesScreenDestination
 import com.example.senakapp.ui.screen.destinations.ProfileScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -62,6 +67,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navigator: DestinationsNavigator) 
 @Composable
 fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?) {
 
+    val TAG = "HomeScreenAuth"
+
+    val account: GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(LocalContext.current)!!
+
+    Log.d(TAG, "HomeContent: ${account.idToken}")
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,12 +83,12 @@ fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?
 
     ) {
         Text(
-            text = "Sehatin Anak Yuk!",
+            text = "Haloo, Selamat datang ${account.displayName}",
             fontFamily = signikaFont,
             fontWeight = FontWeight.SemiBold,
             fontSize = 25.sp,
             color = Color(android.graphics.Color.parseColor("#91C788")),
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -174,8 +186,8 @@ fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?
         )
 
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
             items(RecommendationCard.recommendationCard) { recommendation ->

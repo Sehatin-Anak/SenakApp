@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -39,10 +41,13 @@ fun BiodataScreen() {
 @Composable
 fun BiodataContent(modifier: Modifier = Modifier) {
     var name by remember { mutableStateOf(TextFieldValue("")) }
-    var old by remember { mutableStateOf(TextFieldValue("")) }
+    var age by remember { mutableStateOf(TextFieldValue("")) }
+    var ageCategory by remember { mutableStateOf(TextFieldValue("")) }
     var gender by remember { mutableStateOf(TextFieldValue("")) }
-    var isDropdownExpandedOld by remember { mutableStateOf(false) }
+    var isDropdownExpandedAge by remember { mutableStateOf(false) }
     var isDropdownExpandedGender by remember { mutableStateOf(false) }
+
+    val ageRanges = listOf(1, 2, 3,4,5,6,7,8,9)
 
     Column (
          modifier = Modifier
@@ -88,72 +93,77 @@ fun BiodataContent(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .padding(16.dp)
             )
-
-
-
             ExposedDropdownMenuBox(
-                expanded = isDropdownExpandedOld,
+                expanded = isDropdownExpandedAge,
 
                 onExpandedChange = { newValue ->
-                    isDropdownExpandedOld = newValue
+                    isDropdownExpandedAge = newValue
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .background(Color.Transparent)
-            ) {
+            ){
                 OutlinedTextField(
 
-                    value = old,
+                    value = age,
                     onValueChange = {},
+                    isError = age.text.length < 3,
                     readOnly = true,
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpandedOld)
+                        TrailingIcon(expanded = isDropdownExpandedAge)
                     },
                     placeholder = {
-                        Text(text = "Umur Anak")
+                        Text(text = "Kategori Umur")
                     },
 
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
-
+                        .background(Color.Transparent)
                 )
 
                 ExposedDropdownMenu(
-                    expanded = isDropdownExpandedOld,
-                    onDismissRequest = {
-                        isDropdownExpandedOld = false
-                    }
+                    expanded = isDropdownExpandedAge,
+                    onDismissRequest = { isDropdownExpandedAge = false },
+                    modifier = Modifier.width(16.dp).offset(
+                       -16.dp,-16.dp
+                    )
+
+
+
                 ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "1 - 3 Tahun")
-                        },
-                        onClick = {
-                            old = TextFieldValue("1 - 3 Tahun")
-                            isDropdownExpandedOld = false
+
+
+                    DropdownMenu(
+                        expanded = isDropdownExpandedAge,
+                        onDismissRequest = { isDropdownExpandedAge = false }
+                    ) {
+                        ageRanges.map { ageRange ->
+                            DropdownMenuItem(
+                                text = { Text(text = ageRange.toString()) },
+                                onClick = {
+                                    age = TextFieldValue(ageRange.toString())
+                                    isDropdownExpandedAge = false
+                                }
+                            )
                         }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "4 - 6 Tahun")
-                        },
-                        onClick = {
-                            old = TextFieldValue("4 - 6 Tahun")
-                            isDropdownExpandedOld = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "7 - 9 Tahun")
-                        },
-                        onClick = {
-                            old = TextFieldValue("7 - 9 Tahun")
-                            isDropdownExpandedOld = false
-                        }
-                    )
+                    }
+
+                    if (age.text > "0" && age.text <= "3") {
+                        ageCategory = TextFieldValue("1")
+                    } else if (age.text >= "4" && age.text <= "6") {
+                        ageCategory = TextFieldValue("2")
+                    } else if (age.text >= "7" && age.text <= "9") {
+                        ageCategory = TextFieldValue("3")
+                    }
+val TAG = "AGE"
+
+                    Log.d (TAG, "BiodataContentAgeCategory: ${ageCategory.text}")
+                    Log.d (TAG, "BiodataContentAge: ${age.text}")
+
                 }
+
+
 
             }
 
@@ -172,9 +182,10 @@ fun BiodataContent(modifier: Modifier = Modifier) {
 
                     value = gender,
                     onValueChange = {},
+                    isError = gender.text.length < 3,
                     readOnly = true,
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpandedGender)
+                        TrailingIcon(expanded = isDropdownExpandedGender)
                     },
                     placeholder = {
                         Text(text = "Jenis Kelamin")
@@ -235,12 +246,13 @@ fun BiodataContent(modifier: Modifier = Modifier) {
 
                 onClick = {
 
-                    when(old.text){
-                        "1 - 3 Tahun" -> old = TextFieldValue("1")
-                        "4 - 6 Tahun" -> old = TextFieldValue("2")
-                        "7 - 9 Tahun" -> old = TextFieldValue("3")
+                    when(age.text){
+                        "1 - 3 Tahun" -> age = TextFieldValue("1 - 3 Tahun")
+                        "4 - 6 Tahun" -> age = TextFieldValue("4 - 6 Tahun")
+                        "7 - 9 Tahun" -> age = TextFieldValue("7 - 9 Tahun")
+
                     }
-                          Log.d("Old", old.text)
+                          Log.d("Old", "${age.text.toInt()}")
 
 
 
