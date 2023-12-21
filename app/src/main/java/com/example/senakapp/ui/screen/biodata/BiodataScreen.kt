@@ -1,6 +1,7 @@
 package com.example.senakapp.ui.screen.biodata
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -62,6 +65,7 @@ fun BiodataScreen(navigator: DestinationsNavigator) {
 
 }
 
+@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
@@ -81,13 +85,8 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var age by remember { mutableStateOf(TextFieldValue("")) }
     var ageCategory by remember { mutableStateOf(TextFieldValue("")) }
-    var gender by remember { mutableStateOf(TextFieldValue("")) }
-    var isDropdownExpandedAge by remember { mutableStateOf(false) }
-    var isDropdownExpandedGender by remember { mutableStateOf(false) }
     var childWeight by remember { mutableStateOf(TextFieldValue("")) }
     var childHeight by remember { mutableStateOf(TextFieldValue("")) }
-
-    val ageRanges = listOf(1, 2, 3,4,5,6,7,8,9)
     var isButtonEnabled by remember { mutableStateOf(false) }
 
 
@@ -132,6 +131,7 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
                     Text("Nama", fontFamily = signikaFont)
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -146,6 +146,7 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
                     Text("Berat", fontFamily = signikaFont)
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -159,6 +160,7 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
                     Text("Tinggi", fontFamily = signikaFont)
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -166,31 +168,34 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
 
             OutlinedTextField(
                 value = age,
-                onValueChange = { age = it
+                onValueChange = {
+                    age = it
 
-                    when (age.text.toInt()) {
-                        1 -> ageCategory = TextFieldValue("1")
-                        2 -> ageCategory = TextFieldValue("1")
-                        3 -> ageCategory = TextFieldValue("1")
-                        4 -> ageCategory = TextFieldValue("2")
-                        5 -> ageCategory = TextFieldValue("2")
-                        6 -> ageCategory = TextFieldValue("2")
-                        7 -> ageCategory = TextFieldValue("3")
-8 -> ageCategory = TextFieldValue("3")
-9 -> ageCategory = TextFieldValue("3")
-                        else -> ageCategory = TextFieldValue("1")
-
-
-
+                    // Check if the input is not empty before converting to int
+                    if (it.text.isNotEmpty()) {
+                        when (it.text) {
+                            "1" -> ageCategory = TextFieldValue("1")
+                            "2" -> ageCategory = TextFieldValue("1")
+                            "3" -> ageCategory = TextFieldValue("1")
+                            "4" -> ageCategory = TextFieldValue("2")
+                            "5" -> ageCategory = TextFieldValue("2")
+                            "6" -> ageCategory = TextFieldValue("2")
+                            "7" -> ageCategory = TextFieldValue("3")
+                            "8" -> ageCategory = TextFieldValue("3")
+                            "9" -> ageCategory = TextFieldValue("3")
+                            else -> ageCategory = TextFieldValue("1")
+                        }
+                    } else {
+                        // Handle the case when the input is empty, you may set a default value or show an error message.
+                        ageCategory = TextFieldValue("1")
                     }
-
-
-                                },
-                isError = age.text.length >1,
+                },
+                isError = age.text.length > 1,
                 placeholder = {
                     Text("Umur", fontFamily = signikaFont)
                 },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -203,69 +208,13 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
 
 
 
-            ExposedDropdownMenuBox(
-                expanded = isDropdownExpandedGender,
-
-                onExpandedChange = { newValue ->
-                    isDropdownExpandedGender = newValue
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                OutlinedTextField(
-
-                    value = gender,
-                    onValueChange = {
-                        gender = it
-                    },
-                    readOnly = true,
-                    trailingIcon = {
-                        TrailingIcon(expanded = isDropdownExpandedGender)
-                    },
-                    placeholder = {
-                        Text(text = "Jenis Kelamin")
-                    },
-
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                )
-
-                ExposedDropdownMenu(
-                    expanded = isDropdownExpandedGender,
-                    onDismissRequest = {
-                        isDropdownExpandedGender = false
-                    }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "Male")
-                        },
-                        onClick = {
-                            gender = TextFieldValue("Male")
-                            isDropdownExpandedGender = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "Female")
-                        },
-                        onClick = {
-                            gender = TextFieldValue("Female")
-                            isDropdownExpandedGender = false
-                        }
-                    )
-
-                }
-
-            }
 
 
 
 
 
+
+isButtonEnabled = name.text.isNotEmpty() && childWeight.text.isNotEmpty() && childHeight.text.isNotEmpty() && age.text.isNotEmpty() && ageCategory.text.isNotEmpty()
 
             Button(
 
@@ -324,7 +273,12 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
                 // Lakukan sesuatu dengan respons yang diterima
                 Log.d("BiodataContent", "Response: $response")
                 Log.d("BiodataContent", "Response: ${response.message}")
-                navigator.navigate(HomeScreenDestination)
+                navigator.navigate(HomeScreenDestination(),
+                    builder = {
+                        popUpTo(HomeScreenDestination.baseRoute)
+                    }
+
+                )
             }
             is ApiResponse.Error -> {
                 val errorMessage = (postBiodataResult as ApiResponse.Error).message

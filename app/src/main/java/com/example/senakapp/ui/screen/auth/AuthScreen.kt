@@ -1,6 +1,7 @@
 package com.example.senakapp.ui.screen.auth
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.service.autofill.UserData
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +51,7 @@ import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.runBlocking
@@ -63,9 +66,23 @@ fun AuthScreen(navigator: DestinationsNavigator) {
 }
 
 
+@SuppressLint("SuspiciousIndentation", "RestrictedApi")
 @Composable
 fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
     val viewModel = hiltViewModel<AuthViewModel>()
+    var isLoginAndVerificationDone by remember { mutableStateOf(false) }
+
+    val lastToken = viewModel.getToken()
+    if (lastToken != null && !isLoginAndVerificationDone) {
+        LaunchedEffect(Unit) {
+            viewModel.performGoogleLogin(lastToken)
+            viewModel.verifyChild(viewModel.getIdUser().toString())
+            isLoginAndVerificationDone = true
+        }
+    }
+
+
+
 
     Column(
         modifier = Modifier
@@ -94,53 +111,58 @@ Image(
         val verifyChildResult by viewModel.verifyChildResult.collectAsState()
         val loginResult by viewModel.loginResult.collectAsState()
 
-            when (loginResult) {
-                is ApiResponse.Success -> {
-                    // Navigasi ke HomeScreen jika berhasil masuk
-                    if (verifyChildResult is ApiResponse.Success) {
-                        navigator.navigate(HomeScreenDestination)
-                    } else {
-                        navigator.navigate(BiodataScreenDestination)
+
+            if (loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Success) {
+                // Navigasi ke HomeScreen jika berhasil masuk dan verifikasi anak berhasil
+                navigator.navigate(HomeScreenDestination(),
+                    builder = {
+                        popUpTo(HomeScreenDestination.baseRoute) {
+                            inclusive = true
+                        }
                     }
 
-                    Log.d("AuthContent", "Login success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
+                )
+
+                Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
+                Log.d("AuthContent", "Login and verify success: ${(verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data}")
+
+
+                Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
+            } else if (verifyChildResult is ApiResponse.Error && loginResult is ApiResponse.Success) {
+                // Navigasi ke BiodataScreen jika verifikasi anak gagal
+                navigator.navigate(BiodataScreenDestination(),
+                    builder = {
+                        popUpTo(BiodataScreenDestination.baseRoute) {
+                            inclusive = true
+                        }
+                    }
+
+                )
+                Log.d("AuthContent", "Login success and verify child error: ${(verifyChildResult as ApiResponse.Error).message}")
+                Log.d("AuthContent", "Login success and verify child error: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
+
+
+
+                Log.e("AuthContent", "Verify child error: ${(verifyChildResult as ApiResponse.Error).message}")
+            } else if ( loginResult is ApiResponse.Error ) {
+                // Logika tambahan jika diperlukan ketika kondisi tidak terpenuhi
+
+                navigator.navigate(AuthScreenDestination()) {
+                    popUpTo(AuthScreenDestination.baseRoute) {
+                        inclusive = true
+                    }
                 }
-                is ApiResponse.Error -> {
-                    // Handle kesalahan jika diperlukan
-                    val errorMessage = (loginResult as ApiResponse.Error).message
-                    Log.e("AuthContent", "Login error: $errorMessage")
-                }
-                // Tambahan kode untuk menangani keadaan lain jika diperlukan
-                else -> {
-                    Log.d("AuthContent", "Login loading ${loginResult is ApiResponse.Loading}")
-                }
+                Log.d("AuthContent", "Login loading: ${loginResult is ApiResponse.Loading}")
             }
 
-            when (verifyChildResult) {
-                is ApiResponse.Loading -> {
-                    // Tampilkan loading indicator jika diperlukan
-                }
-                is ApiResponse.Success -> {
-                    // Respons berhasil, tambahkan logika navigasi ke home screen di sini
-                    Log.d("BiodataContent", "Success: ${(verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data}")
-
-                }
-                is ApiResponse.Error -> {
-                    val errorMessage = (verifyChildResult as ApiResponse.Error).message
-                    // Tangani kesalahan jika diperlukan
-                    Log.e("BiodataContent", "Error: $errorMessage")
-                }
-                // Tambahan kode untuk menangani keadaan lain jika diperlukan
-                else -> {
-                    Log.d("BiodataContent", "Empty")
-                }
-            }
         }
 
-
-
-
     }
+
+
+
+
+
 
 
 
@@ -165,16 +187,6 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
 
 
 
-    val lastToken = viewModel.getToken()
-    if (lastToken != null) {
-        // Pengguna sudah login sebelumnya, coba otentikasi dengan token yang ada
-        LaunchedEffect(Unit) {
-            viewModel.performGoogleLogin(lastToken)
-            viewModel.verifyChild(viewModel.getIdUser().toString())
-
-
-        }
-    }
 
 
 

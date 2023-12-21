@@ -117,6 +117,8 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
         when (verifyChildResult) {
             is ApiResponse.Success -> {
                 val verifyChildData = (verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data.data
+
+                Log.d("HomeContent", "Verify Child success: $verifyChildData")
                 // Now you can use the verifyChildData in your UI logic
             }
             is ApiResponse.Error -> {

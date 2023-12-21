@@ -5,35 +5,35 @@ import com.squareup.moshi.Json
 data class VerifyChildResponse(
 
 	@Json(name="data")
-	val data: Data? = null
+	val data: Data
 )
 
 data class Data(
 
 	@Json(name="createdAt")
-	val createdAt: String? = null,
+	val createdAt: String,
 
 	@Json(name="name")
-	val name: String? = null,
+	val name: String,
 
 	@Json(name="weight")
-	val weight: Int? = null,
+	val weight: Int,
 
 	@Json(name="id")
-	val id: Int? = null,
+	val id: Int,
 
 	@Json(name="tall")
-	val tall: Int? = null,
+	val tall: Int,
 
 	@Json(name="ageCategory")
-	val ageCategory: Int? = null,
+	val ageCategory: Int,
 
 	@Json(name="userId")
-	val userId: String? = null,
+	val userId: String,
 
 	@Json(name="age")
-	val age: Int? = null,
+	val age: Int,
 
 	@Json(name="updatedAt")
-	val updatedAt: String? = null
+	val updatedAt: String
 )

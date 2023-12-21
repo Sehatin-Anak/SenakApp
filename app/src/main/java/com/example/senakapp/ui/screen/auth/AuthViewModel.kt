@@ -73,30 +73,39 @@ class AuthViewModel @Inject constructor(
     fun verifyChild(userId: String) {
         viewModelScope.launch {
             try {
-                _verifyChildResult.value = ApiResponse.Loading
-
-                // Panggil fungsi getBioChild dari BiodataService
                 val response = biodataService.getBioChild(userId)
 
-                // Periksa apakah respons berhasil atau tidak
                 if (response.isSuccessful) {
-                    // Respons berhasil, simpan respons ke StateFlow
-                    _verifyChildResult.value = ApiResponse.Success(response.body()!!)
-                    Log.d("BiodataViewModel", "verifyChild: Success")
-                    // Lakukan tindakan sukses jika diperlukan
+                    val verifyChildResponse = response.body()
+
+                    if (verifyChildResponse != null) {
+                        // Lakukan sesuatu dengan data verifyChildResponse
+                        _verifyChildResult.value = ApiResponse.Success(verifyChildResponse)
+                    } else {
+                        // Handle kasus response data=null
+                        _verifyChildResult.value = ApiResponse.Error("Data is null")
+                    }
                 } else {
-                    // Respons tidak berhasil, simpan pesan kesalahan ke StateFlow
-                    _verifyChildResult.value =
-                        ApiResponse.Error("Gagal verifikasi anak: ${response.message()}")
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("AuthViewModel", "verifyChild error: ${response.code()}, $errorBody")
+                    // Handle error dari response
+                    // Misalnya, response.code(), errorBody, dll.
+                    _verifyChildResult.value = ApiResponse.Error(errorBody ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                // Tangani kesalahan yang mungkin terjadi selama proses
-                // Simpan pesan kesalahan ke StateFlow
-                _verifyChildResult.value =
-                    ApiResponse.Error("Terjadi kesalahan verifikasi anak: ${e.message}")
+                Log.e("AuthViewModel", "verifyChild exception: ${e.message}")
+                // Handle exception
+                _verifyChildResult.value = ApiResponse.Error(e.message ?: "Unknown error")
+            } finally {
+                // Pastikan untuk menangani ApiResponse.Empty dengan benar
+                if (_verifyChildResult.value is ApiResponse.Empty) {
+                    _verifyChildResult.value = ApiResponse.Error("Unexpected empty response")
+                }
             }
         }
     }
+
+
 
     fun saveIdUserAsync(idUser: String) {
 
