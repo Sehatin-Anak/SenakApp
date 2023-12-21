@@ -4,6 +4,7 @@ package com.example.senakapp.di.module
 import android.content.SharedPreferences
 import com.example.senakapp.data.retrofit.AuthService
 import com.example.senakapp.data.retrofit.BiodataService
+import com.example.senakapp.data.retrofit.DetailRecipesService
 import com.example.senakapp.data.retrofit.HomeService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -69,6 +70,12 @@ object NetworkModule {
     @Singleton
     fun provideBiodataService(retrofit: Retrofit): BiodataService {
         return retrofit.create(BiodataService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailRecipesService(retrofit: Retrofit): DetailRecipesService {
+        return retrofit.create(DetailRecipesService::class.java)
     }
 }
 

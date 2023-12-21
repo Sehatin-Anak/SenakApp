@@ -48,6 +48,7 @@ import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.ui.components.carditem.RecommendationCardItem
 import com.example.senakapp.ui.screen.destinations.ArticlesScreenDestination
 import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
+import com.example.senakapp.ui.screen.destinations.DetailRecipesScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
 import com.example.senakapp.utils.ApiResponse
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -182,7 +183,7 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
               modifier = Modifier
                   .fillMaxWidth()
                   .height(200.dp)
-                  .padding(16.dp)
+                  .padding(8.dp)
        ) {
            Box(
                modifier = Modifier.fillMaxSize()
@@ -195,7 +196,7 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
                ) {
                    Column(
                        modifier = Modifier
-                           .width(150.dp)
+                           .width(100.dp)
                            .padding(start = 12.dp, top = 4.dp),
                        verticalArrangement = Arrangement.Center
                    ) {
@@ -286,6 +287,9 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
                         // Tampilkan data makanan di sini
                         RecommendationCardItem(foodItem) {
                             Log.d("HomeScreen", "HomeContent: ${foodItem.name}")
+                            navigator?.navigate(DetailRecipesScreenDestination(
+                                foodItem.id
+                            ))
                         }
                     }
                 }

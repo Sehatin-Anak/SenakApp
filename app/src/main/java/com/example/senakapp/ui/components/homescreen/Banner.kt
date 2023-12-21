@@ -37,7 +37,7 @@ fun Banner(
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier.clip(MaterialTheme.shapes.large)
-        .size(width = 250.dp, height = 150.dp),
+        .size(width = 250.dp, height = 100.dp),
 
 
 

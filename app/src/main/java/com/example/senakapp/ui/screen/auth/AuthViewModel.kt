@@ -41,8 +41,8 @@ class AuthViewModel @Inject constructor(
     private val _verifyChildResult =
         MutableStateFlow<ApiResponse<VerifyChildResponse>>(ApiResponse.Empty)
     val verifyChildResult: StateFlow<ApiResponse<VerifyChildResponse>> get() = _verifyChildResult
-    fun performGoogleLogin(token: String) {
-        viewModelScope.launch {
+    suspend fun performGoogleLogin(token: String) {
+
             try {
                 val response = authService.authenticateWithGoogle(token)
 
@@ -66,12 +66,12 @@ class AuthViewModel @Inject constructor(
                 // Handle exception
                 _loginResult.value = ApiResponse.Error(e.message ?: "Unknown error")
             }
-        }
+
     }
 
 
-    fun verifyChild(userId: String) {
-        viewModelScope.launch {
+    suspend fun verifyChild(userId: String) {
+
             try {
                 val response = biodataService.getBioChild(userId)
 
@@ -102,7 +102,7 @@ class AuthViewModel @Inject constructor(
                     _verifyChildResult.value = ApiResponse.Error("Unexpected empty response")
                 }
             }
-        }
+
     }
 
 

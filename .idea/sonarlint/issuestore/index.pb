@@ -134,3 +134,17 @@ w
 G.idea/sonarlint/issuestore/a/c/ac074d7a25f7b5ba585d32e5eb7e22a2a4f67598,1\0\10b345d7f8896cc8667ce608e86a2adf3f2afdcb
 {
 Kapp/src/main/java/com/example/senakapp/model/biodata/VerifyChildResponse.kt,b\e\be3d3537f4fbab12ef31355d5391fd744356ea8d
+Å
+Qapp/src/main/java/com/example/senakapp/ui/screen/foodrecipes/FoodRecipesScreen.kt,a\3\a336c3034562cecf4e4acf2a6876fef64b4688e0
+Ñ
+Tapp/src/main/java/com/example/senakapp/ui/screen/detail_recipes/FoodRecipesScreen.kt,a\d\adb1d406ae3b53aa8c55b99a12fa102c62c77969
+Ü
+Vapp/src/main/java/com/example/senakapp/ui/screen/detail_recipes/DetailRecipesScreen.kt,9\0\90d417ee15622f1ada8961d343a227ec6bce47f4
+â
+Yapp/src/main/java/com/example/senakapp/ui/screen/detail_recipes/DetailRecipesViewModel.kt,c\c\cc8ed383f028ce2a20ff9a41ef749a090cd09ad4
+|
+Lapp/src/main/java/com/example/senakapp/data/retrofit/DetailRecipesService.kt,2\2\22e506e4b4ec222197e48361360a201027e08a2d
+É
+Sapp/src/main/java/com/example/senakapp/model/detailrecipes/DetailRecipesResponse.kt,5\d\5dea947ff72ab1c48b47219cf96e6365e59e9932
+Å
+Qapp/src/main/java/com/example/senakapp/data/repository/DetailRecipesRepository.kt,a\d\ad585bd2ce202717860eec0904812b7f96c3eba0

@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.DisposableEffectScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -70,16 +72,31 @@ fun AuthScreen(navigator: DestinationsNavigator) {
 @Composable
 fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
     val viewModel = hiltViewModel<AuthViewModel>()
-    var isLoginAndVerificationDone by remember { mutableStateOf(false) }
 
-    val lastToken = viewModel.getToken()
+
+    var isLoginAndVerificationDone by remember { mutableStateOf(false) }
+    val lastToken = remember { viewModel.getToken() }
+
+
+
+LaunchedEffect(Unit ){
+
     if (lastToken != null && !isLoginAndVerificationDone) {
-        LaunchedEffect(Unit) {
-            viewModel.performGoogleLogin(lastToken)
-            viewModel.verifyChild(viewModel.getIdUser().toString())
-            isLoginAndVerificationDone = true
-        }
+        viewModel.performGoogleLogin(lastToken)
+        viewModel.verifyChild(viewModel.getIdUser().toString())
+        Log.d("AuthContent", "Login and verify success: $isLoginAndVerificationDone")
+
     }
+
+
+}
+
+
+
+
+
+
+
 
 
 
@@ -110,6 +127,7 @@ Image(
             )
         val verifyChildResult by viewModel.verifyChildResult.collectAsState()
         val loginResult by viewModel.loginResult.collectAsState()
+
 
 
             if (loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Success) {
@@ -157,6 +175,7 @@ Image(
 
         }
 
+
     }
 
 
@@ -167,10 +186,34 @@ Image(
 
 
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
     val viewModel = hiltViewModel<AuthViewModel>()
-    val loginResult by viewModel.loginResult.collectAsState(initial = ApiResponse.Loading)
+
+    val verifyChildResult by viewModel.verifyChildResult.collectAsState(initial = ApiResponse.Empty)
+
+    when(verifyChildResult){
+        is ApiResponse.Loading -> {
+            // Tampilkan loading indicator jika diperlukan
+        }
+        is ApiResponse.Success -> {
+            // Mendapatkan data hasil pengambilan
+            val response = (verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data
+
+            // Memanggil UI dengan data yang diperoleh
+            Log.d("AuthCard", "AuthCard: ${response.data}")
+        }
+        is ApiResponse.Error -> {
+            // Tangani kesalahan jika diperlukan
+            val errorMessage = (verifyChildResult as ApiResponse.Error).message
+            // Tampilkan pesan kesalahan ke pengguna atau lakukan tindakan yang sesuai
+        }
+        // tambahkan blok lain jika diperlukan
+        else -> {
+            Log.d("AuthCard", "AuthCard: ${verifyChildResult} ")
+        }
+    }
 
     val context = LocalContext.current
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -186,10 +229,6 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
 
 
 
-
-
-
-
     val signInLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -200,6 +239,19 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
                     handleSignInResult(task, navigator)
                     viewModel.saveTokenAsync(task.result?.idToken.toString())
                     viewModel.saveIdUserAsync(task.result?.id.toString())
+
+                    if (verifyChildResult is ApiResponse.Success<VerifyChildResponse>){
+                        navigator.navigate(HomeScreenDestination(),
+                            builder = {
+                                popUpTo(HomeScreenDestination.baseRoute) {
+                                    inclusive = true
+                                }
+                            }
+
+
+                            )
+                    }
+
 
 
 
