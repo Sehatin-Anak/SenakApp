@@ -2,6 +2,11 @@ package com.example.senakapp.di.module
 
 
 import android.content.SharedPreferences
+import com.example.senakapp.data.retrofit.AuthService
+import com.example.senakapp.data.retrofit.BiodataService
+import com.example.senakapp.data.retrofit.HomeService
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,37 +19,58 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+object NetworkModule {
+
+    val moshi = Moshi.Builder()
+        .addLast(KotlinJsonAdapterFactory())
+        .build()
+
+
 
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(sharedPreferences: SharedPreferences): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                // Mendapatkan idToken dari DataStore
-               val token = sharedPreferences.getString("token", null)
-
-                // Menambahkan header ke permintaan berdasarkan idToken dan Content-Type
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer c5e88212ee5ff00fec0742fd86f88e88")
-                    .addHeader("idToken", "$token") // Misalnya, tambahkan header Content-Type
                     .build()
-
-                // Melanjutkan permintaan
                 chain.proceed(request)
             }
             .build()
     }
 
+
+
     @Provides
     @Singleton
-    fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://localhost:3001/")
-            .addConverterFactory(MoshiConverterFactory.create())
+            .baseUrl("https://cd9f-103-154-109-87.ngrok-free.app")
             .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeService(retrofit: Retrofit): HomeService {
+        return retrofit.create(HomeService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBiodataService(retrofit: Retrofit): BiodataService {
+        return retrofit.create(BiodataService::class.java)
+    }
 }
+
+
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,30 +17,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.senakapp.data.Recommendation
+import com.example.senakapp.model.DataItem
 import com.example.senakapp.ui.theme.signikaFont
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecommendationCardItem(
-    recommendation: Recommendation
+fun RecommendationCardItem(  data : DataItem, onClick : () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .padding(16.dp),
+            .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
+        onClick = onClick,
 
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
         ) {
             // Gunakan Image() alih-alih AsyncImage(), karena imageBitmap dari AsyncImage tidak cocok dengan Image()
 
@@ -51,8 +55,8 @@ fun RecommendationCardItem(
 
 
                 AsyncImage(
-                    model = recommendation.image,
-                    contentDescription = recommendation.title,
+                    model = data.img,
+                    contentDescription = data.name,
                     modifier = Modifier
                         .width(150.dp)
                         .clip(
@@ -61,20 +65,55 @@ fun RecommendationCardItem(
                     contentScale = ContentScale.Crop,
 
                 )
-                Spacer(modifier = Modifier.width(24.dp))
-                Text(
-                    text = recommendation.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontFamily = signikaFont,
-                    fontWeight = FontWeight.Bold,
-                )
+                Spacer(modifier = Modifier.width(8.dp))
+
 
 
 
                 Column(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier
+                        .padding(top = 2.dp)
+                        .fillMaxWidth()
                 ) {
+
+                    Text(
+                        text = data.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontFamily = signikaFont,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+
+                    Text(
+                        text = data.category,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontFamily = signikaFont,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = "${data.reviewCount} Orang merekomendasikan",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = signikaFont,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+
+                    Text(
+                        text = "⭐(${data.agregateRating})",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = signikaFont,
+                        fontWeight = FontWeight.Bold,
+                    )
+
+
+
+
+
             }
+
+
 
 
 
@@ -96,12 +135,6 @@ fun RecommendationCardItem(
 @Composable
 fun RecommendationCardPreview() {
 
-    RecommendationCardItem(
-       recommendation = Recommendation(
-           id = 1,
-           title = "Recommendation",
-           image = "https://images.unsplash.com/photo-1621574539437-8b9b7b0b8b9f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXR5JTIwY2FyZHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
 
-       )
-    )
+
 }

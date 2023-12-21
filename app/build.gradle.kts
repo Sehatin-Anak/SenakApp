@@ -7,6 +7,8 @@ plugins {
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp") version "1.9.20-1.0.14"
+id("com.google.dagger.hilt.android") version "2.48.1"
+
 }
 kotlin {
     sourceSets {
@@ -112,7 +114,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 
@@ -128,6 +130,10 @@ dependencies {
     /* Retrofit + Moshi Converter*/
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
+    implementation("com.squareup.moshi:moshi-adapters:1.14.0")
+
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")

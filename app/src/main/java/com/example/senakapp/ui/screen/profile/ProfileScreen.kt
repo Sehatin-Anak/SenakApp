@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.senakapp.R
 import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
@@ -53,6 +54,7 @@ fun ProfileScreen(navigator: DestinationsNavigator?) {
 @SuppressLint("RestrictedApi")
 @Composable
 fun ProfileContent(navigator: DestinationsNavigator?) {
+    val viewModel = hiltViewModel<ProfileViewModel>()
 
     val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -158,6 +160,7 @@ fun ProfileContent(navigator: DestinationsNavigator?) {
                                     Log.d("ProfileScreen", "SignOut Failed: ${task.exception?.message}")
                                 }
                             }
+                        viewModel.deleteToken()
 
 
                        navigator?.navigate(AuthScreenDestination(),

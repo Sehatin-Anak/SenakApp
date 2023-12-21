@@ -22,6 +22,8 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -37,29 +40,57 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.senakapp.R
+import com.example.senakapp.model.biodata.BiodataRequest
+import com.example.senakapp.model.biodata.BiodataRequestResponse
+import com.example.senakapp.model.biodata.BiodataResponse
+import com.example.senakapp.ui.screen.destinations.HomeScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
+import com.example.senakapp.utils.ApiResponse
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
 @Destination(route = "biodata")
 @Composable
-fun BiodataScreen() {
-    BiodataContent()
+fun BiodataScreen(navigator: DestinationsNavigator) {
+    BiodataContent(navigator = navigator)
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BiodataContent(modifier: Modifier = Modifier) {
+fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
+
+
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
+
+    val googleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
+
+    val account = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
+
+    val viewModel = hiltViewModel<BiodataViewModel>()
+
+
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var age by remember { mutableStateOf(TextFieldValue("")) }
     var ageCategory by remember { mutableStateOf(TextFieldValue("")) }
     var gender by remember { mutableStateOf(TextFieldValue("")) }
     var isDropdownExpandedAge by remember { mutableStateOf(false) }
     var isDropdownExpandedGender by remember { mutableStateOf(false) }
+    var childWeight by remember { mutableStateOf(TextFieldValue("")) }
+    var childHeight by remember { mutableStateOf(TextFieldValue("")) }
 
     val ageRanges = listOf(1, 2, 3,4,5,6,7,8,9)
+    var isButtonEnabled by remember { mutableStateOf(false) }
+
+
 
     Column (
          modifier = Modifier
@@ -105,79 +136,71 @@ fun BiodataContent(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .padding(16.dp)
             )
-            ExposedDropdownMenuBox(
-                expanded = isDropdownExpandedAge,
 
-                onExpandedChange = { newValue ->
-                    isDropdownExpandedAge = newValue
+
+            OutlinedTextField(
+                value = childWeight,
+                onValueChange = { childWeight = it },
+                isError = childWeight.text.length >= 4,
+                placeholder = {
+                    Text("Berat", fontFamily = signikaFont)
                 },
+                singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-            ){
-                OutlinedTextField(
+            )
 
-                    value = age,
-                    onValueChange = {},
-                    isError = age.text.length < 3,
-                    readOnly = true,
-                    trailingIcon = {
-                        TrailingIcon(expanded = isDropdownExpandedAge)
-                    },
-                    placeholder = {
-                        Text(text = "Kategori Umur")
-                    },
+            OutlinedTextField(
+                value = childHeight,
+                onValueChange = { childHeight = it },
+                isError = childHeight.text.length >= 4,
+                placeholder = {
+                    Text("Tinggi", fontFamily = signikaFont)
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
 
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                )
+            OutlinedTextField(
+                value = age,
+                onValueChange = { age = it
 
-                ExposedDropdownMenu(
-                    expanded = isDropdownExpandedAge,
-                    onDismissRequest = { isDropdownExpandedAge = false },
-                    modifier = Modifier.width(16.dp).offset(
-                       -16.dp,-16.dp
-                    )
+                    when (age.text.toInt()) {
+                        1 -> ageCategory = TextFieldValue("1")
+                        2 -> ageCategory = TextFieldValue("1")
+                        3 -> ageCategory = TextFieldValue("1")
+                        4 -> ageCategory = TextFieldValue("2")
+                        5 -> ageCategory = TextFieldValue("2")
+                        6 -> ageCategory = TextFieldValue("2")
+                        7 -> ageCategory = TextFieldValue("3")
+8 -> ageCategory = TextFieldValue("3")
+9 -> ageCategory = TextFieldValue("3")
+                        else -> ageCategory = TextFieldValue("1")
 
 
 
-                ) {
-
-
-                    DropdownMenu(
-                        expanded = isDropdownExpandedAge,
-                        onDismissRequest = { isDropdownExpandedAge = false }
-                    ) {
-                        ageRanges.map { ageRange ->
-                            DropdownMenuItem(
-                                text = { Text(text = ageRange.toString()) },
-                                onClick = {
-                                    age = TextFieldValue(ageRange.toString())
-                                    isDropdownExpandedAge = false
-                                }
-                            )
-                        }
                     }
 
-                    if (age.text > "0" && age.text <= "3") {
-                        ageCategory = TextFieldValue("1")
-                    } else if (age.text >= "4" && age.text <= "6") {
-                        ageCategory = TextFieldValue("2")
-                    } else if (age.text >= "7" && age.text <= "9") {
-                        ageCategory = TextFieldValue("3")
-                    }
-val TAG = "AGE"
 
-                    Log.d (TAG, "BiodataContentAgeCategory: ${ageCategory.text}")
-                    Log.d (TAG, "BiodataContentAge: ${age.text}")
-
-                }
+                                },
+                isError = age.text.length >1,
+                placeholder = {
+                    Text("Umur", fontFamily = signikaFont)
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
 
 
 
-            }
+
+
+
 
 
             ExposedDropdownMenuBox(
@@ -193,8 +216,9 @@ val TAG = "AGE"
                 OutlinedTextField(
 
                     value = gender,
-                    onValueChange = {},
-                    isError = gender.text.length < 3,
+                    onValueChange = {
+                        gender = it
+                    },
                     readOnly = true,
                     trailingIcon = {
                         TrailingIcon(expanded = isDropdownExpandedGender)
@@ -233,18 +257,11 @@ val TAG = "AGE"
                             isDropdownExpandedGender = false
                         }
                     )
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = "Other")
-                        },
-                        onClick = {
-                            gender = TextFieldValue("Other")
-                            isDropdownExpandedGender = false
-                        }
-                    )
+
                 }
 
             }
+
 
 
 
@@ -258,20 +275,30 @@ val TAG = "AGE"
 
                 onClick = {
 
-                    when(age.text){
-                        "1 - 3 Tahun" -> age = TextFieldValue("1 - 3 Tahun")
-                        "4 - 6 Tahun" -> age = TextFieldValue("4 - 6 Tahun")
-                        "7 - 9 Tahun" -> age = TextFieldValue("7 - 9 Tahun")
+                    account?.id?.let {
+                        viewModel.postBiodata(
+                            it, BiodataRequest(
+                                name = name.text,
+                                weight = childWeight.text.toInt(), // Ganti dengan nilai sesuai kebutuhan
+                                tall = childHeight.text.toInt(), // Ganti dengan nilai sesuai kebutuhan
+                                ageCategory = ageCategory.text.toInt(),
+                                age = age.text.toInt()
+                            )
 
+                        )
+                        Log.d("BiodataContent", "$it")
                     }
-                          Log.d("Old", "${age.text.toInt()}")
 
 
 
 
+                    Log.d("BiodataContent", "Button Clicked")
+                    Log.d("BiodataContent", "Name: ${name.text}")
+                    Log.d("BiodataContent", "Weight: ${childWeight.text}")
+                    Log.d("BiodataContent", "Height: ${childHeight.text}")
+                    Log.d("BiodataContent", "Age: ${age.text}")
+                    Log.d("BiodataContent", "Age Category: ${ageCategory.text}")
 
-                    Log.d("Name", name.text)
-                    Log.d("Gender", gender.text)
 
 
                 },
@@ -279,12 +306,36 @@ val TAG = "AGE"
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                enabled = isButtonEnabled,
             ) {
                 Text("Save", fontFamily = signikaFont)
             }
         }
 
+
+        val postBiodataResult by viewModel.postBiodataResult.collectAsState()
+        when (postBiodataResult) {
+            is ApiResponse.Loading -> {
+                // Tampilkan loading indicator jika diperlukan
+            }
+            is ApiResponse.Success -> {
+                val response = (postBiodataResult as ApiResponse.Success<BiodataRequestResponse>).data
+                // Lakukan sesuatu dengan respons yang diterima
+                Log.d("BiodataContent", "Response: $response")
+                Log.d("BiodataContent", "Response: ${response.message}")
+                navigator.navigate(HomeScreenDestination)
+            }
+            is ApiResponse.Error -> {
+                val errorMessage = (postBiodataResult as ApiResponse.Error).message
+                // Tangani kesalahan jika diperlukan
+                Log.e("BiodataContent", "Error: $errorMessage")
+            }
+            // Tambahan kode untuk menangani keadaan lain jika diperlukan
+            else -> {
+              Log.d ("BiodataContent", "Empty")
+            }
+        }
 
 
 
@@ -303,5 +354,5 @@ val TAG = "AGE"
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 fun BiodataScreenPreview() {
-    BiodataScreen()
+
 }
