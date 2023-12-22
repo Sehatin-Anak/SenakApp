@@ -1,7 +1,6 @@
 package com.example.senakapp.data.repository
 
-import com.example.senakapp.data.retrofit.AuthService
-import com.example.senakapp.data.retrofit.HomeService
+import com.example.senakapp.data.retrofit.service.HomeService
 import com.example.senakapp.model.FoodRecommendationsResponse
 import com.example.senakapp.utils.ApiResponse
 import javax.inject.Inject

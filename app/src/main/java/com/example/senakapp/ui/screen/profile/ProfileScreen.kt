@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.senakapp.R
 import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
+import com.example.senakapp.ui.screen.destinations.EditProfileScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -115,7 +116,7 @@ fun ProfileContent(navigator: DestinationsNavigator?) {
                     .fillMaxWidth()
                     .height(50.dp)
                     .clickable {
-                        Log.d("ProfileScreen", "Clicked")
+                        navigator?.navigate(EditProfileScreenDestination)
 
                     },
                 verticalAlignment = Alignment.CenterVertically,
@@ -161,6 +162,7 @@ fun ProfileContent(navigator: DestinationsNavigator?) {
                                 }
                             }
                         viewModel.deleteToken()
+                            viewModel.deleteIdUser()
 
 
                        navigator?.navigate(AuthScreenDestination(),

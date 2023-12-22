@@ -74,22 +74,20 @@ fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator)
     val viewModel = hiltViewModel<AuthViewModel>()
 
 
-    var isLoginAndVerificationDone by remember { mutableStateOf(false) }
+
     val lastToken = remember { viewModel.getToken() }
 
+    LaunchedEffect(Unit) {
+        if (lastToken != null) {
+
+            viewModel.performGoogleLogin(lastToken)
+        }
+        viewModel.verifyChild(viewModel.getIdUser() ?: "Error get id")
 
 
-LaunchedEffect(Unit ){
-
-    if (lastToken != null && !isLoginAndVerificationDone) {
-        viewModel.performGoogleLogin(lastToken)
-        viewModel.verifyChild(viewModel.getIdUser().toString())
-        Log.d("AuthContent", "Login and verify success: $isLoginAndVerificationDone")
 
     }
 
-
-}
 
 
 
@@ -132,30 +130,26 @@ Image(
 
             if (loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Success) {
                 // Navigasi ke HomeScreen jika berhasil masuk dan verifikasi anak berhasil
-                navigator.navigate(HomeScreenDestination(),
-                    builder = {
-                        popUpTo(HomeScreenDestination.baseRoute) {
-                            inclusive = true
-                        }
-                    }
 
-                )
+
+
 
                 Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
                 Log.d("AuthContent", "Login and verify success: ${(verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data}")
+                navigator.navigate(HomeScreenDestination())
+                navigator.popBackStack()
 
 
                 Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
             } else if (verifyChildResult is ApiResponse.Error && loginResult is ApiResponse.Success) {
                 // Navigasi ke BiodataScreen jika verifikasi anak gagal
                 navigator.navigate(BiodataScreenDestination(),
-                    builder = {
-                        popUpTo(BiodataScreenDestination.baseRoute) {
-                            inclusive = true
-                        }
-                    }
+
+
+
 
                 )
+                navigator.popBackStack()
                 Log.d("AuthContent", "Login success and verify child error: ${(verifyChildResult as ApiResponse.Error).message}")
                 Log.d("AuthContent", "Login success and verify child error: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
 
@@ -170,6 +164,8 @@ Image(
                         inclusive = true
                     }
                 }
+
+                navigator.popBackStack()
                 Log.d("AuthContent", "Login loading: ${loginResult is ApiResponse.Loading}")
             }
 
@@ -192,6 +188,9 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
     val viewModel = hiltViewModel<AuthViewModel>()
 
     val verifyChildResult by viewModel.verifyChildResult.collectAsState(initial = ApiResponse.Empty)
+    LaunchedEffect(Unit){
+        viewModel.verifyChild(viewModel.getIdUser() ?: "Error get id")
+    }
 
     when(verifyChildResult){
         is ApiResponse.Loading -> {
@@ -202,7 +201,7 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
             val response = (verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data
 
             // Memanggil UI dengan data yang diperoleh
-            Log.d("AuthCard", "AuthCard: ${response.data}")
+            Log.d("AuthCard", "Verify Success: ${response}")
         }
         is ApiResponse.Error -> {
             // Tangani kesalahan jika diperlukan
@@ -239,6 +238,14 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
                     handleSignInResult(task, navigator)
                     viewModel.saveTokenAsync(task.result?.idToken.toString())
                     viewModel.saveIdUserAsync(task.result?.id.toString())
+                    navigator.navigate(HomeScreenDestination(),
+                        builder = {
+                            popUpTo(HomeScreenDestination.baseRoute) {
+                                inclusive = true
+                            }
+                        }
+
+                    )
 
                     if (verifyChildResult is ApiResponse.Success<VerifyChildResponse>){
                         navigator.navigate(HomeScreenDestination(),
@@ -248,8 +255,8 @@ fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator
                                 }
                             }
 
-
                             )
+                        navigator.popBackStack()
                     }
 
 
@@ -333,6 +340,7 @@ private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>, navigat
 
 
         navigator.navigate(HomeScreenDestination)
+        navigator.popBackStack()
     } catch (e: ApiException) {
         // Tangani kegagalan masuk
         Log.w("YourActivity", "signInResult:failed code=" + e.statusCode)

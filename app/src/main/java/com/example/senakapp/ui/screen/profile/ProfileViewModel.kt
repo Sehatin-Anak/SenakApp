@@ -12,4 +12,8 @@ class ProfileViewModel @Inject constructor(private val sharedPreferences: Shared
     fun deleteToken() {
         sharedPreferences.edit().remove("token").apply()
     }
+
+   fun deleteIdUser() {
+              sharedPreferences.edit().remove("idUser").apply()
+   }
 }

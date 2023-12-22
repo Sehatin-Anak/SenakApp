@@ -1,4 +1,4 @@
-package com.example.senakapp.data.retrofit
+package com.example.senakapp.data.retrofit.service
 
 import com.example.senakapp.model.biodata.BiodataRequest
 import com.example.senakapp.model.biodata.BiodataRequestResponse
@@ -30,7 +30,7 @@ interface BiodataService {
         @Path("id") userId: String,
         @Body updateBiodataRequest: UpdateBiodataRequest
 
-    ): Response<BiodataResponse>
+    ): Response<BiodataRequestResponse>
 
 
 

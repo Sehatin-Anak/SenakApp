@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.senakapp.data.retrofit.AuthService
-import com.example.senakapp.data.retrofit.BiodataService
+import com.example.senakapp.data.retrofit.service.AuthService
+import com.example.senakapp.data.retrofit.service.BiodataService
 import com.example.senakapp.model.auth.LoginResponse
 import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.utils.ApiResponse
@@ -13,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,8 +34,14 @@ class AuthViewModel @Inject constructor(
         return sharedPreferences.getString("token", null)
     }
 
+    fun deleteToken() {
+        viewModelScope.launch {
+            sharedPreferences.edit().remove("token").apply()
+        }
+    }
+
     private val _loginResult = MutableStateFlow<ApiResponse<LoginResponse>>(ApiResponse.Loading)
-    val loginResult: StateFlow<ApiResponse<LoginResponse>> = _loginResult
+    val loginResult: StateFlow<ApiResponse<LoginResponse>> get() = _loginResult
 
     private val _verifyChildResult =
         MutableStateFlow<ApiResponse<VerifyChildResponse>>(ApiResponse.Empty)
@@ -59,6 +64,8 @@ class AuthViewModel @Inject constructor(
                     Log.e("AuthViewModel", "performGoogleLogin error: ${response.code()}, $errorBody")
                     // Handle error dari response
                     // Misalnya, response.code(), errorBody, dll.
+
+                    deleteToken()
                     _loginResult.value = ApiResponse.Error(errorBody ?: "Unknown error")
                 }
             } catch (e: Exception) {
@@ -108,8 +115,12 @@ class AuthViewModel @Inject constructor(
 
 
     fun saveIdUserAsync(idUser: String) {
-
+        viewModelScope.launch{
             sharedPreferences.edit().putString("idUser", idUser).apply()
+
+        }
+
+
 
     }
 

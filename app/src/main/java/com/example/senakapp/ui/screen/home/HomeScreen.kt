@@ -1,8 +1,12 @@
 package com.example.senakapp.ui.screen.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,19 +23,26 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -43,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.senakapp.R
 import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.ui.components.carditem.RecommendationCardItem
@@ -58,11 +70,47 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
+@SuppressLint("RestrictedApi")
 @Destination
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
+    val viewModel = hiltViewModel<HomeViewModel>()
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(ContextCompat.getString(LocalContext.current, R.string.server_client_id))
+        .requestEmail()
+        .build()
+
+    val mGoogleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
 
 
+    BackHandler(enabled = true) {
+        showDialog = true
+    }
+
+    // Display custom Dialog using a Composable function
+    if (showDialog) {
+        ExitDialog(
+            onConfirm = {
+                // Handle onConfirm here
+
+                mGoogleSignInClient.signOut()
+                viewModel.deleteToken()
+                navigator.navigate(AuthScreenDestination()
+                )
+                navigator.popBackStack()
+                showDialog = false
+            },
+            onDismiss = {
+                // Handle onDismiss here
+                showDialog = false
+            }
+        )
+
+    }
     HomeContent(navigator = navigator)
 
 
@@ -73,7 +121,6 @@ fun HomeScreen(modifier: Modifier = Modifier, navigator: DestinationsNavigator) 
 @SuppressLint("FlowOperatorInvokedInComposition", "RestrictedApi")
 @Composable
 fun HomeContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator?) {
-
 
     val viewModel = hiltViewModel<HomeViewModel>()
     val foodRecommendations by viewModel.foodRecommendations.collectAsState()
@@ -287,16 +334,14 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
                         // Tampilkan data makanan di sini
                         RecommendationCardItem(foodItem) {
                             Log.d("HomeScreen", "HomeContent: ${foodItem.name}")
-                            navigator?.navigate(DetailRecipesScreenDestination(
-                                foodItem.id
-                            ))
+                            navigator?.navigate(DetailRecipesScreenDestination(foodItem.id))
                         }
                     }
                 }
             }
             is ApiResponse.Error -> {
                 // Tampilkan pesan error
-                Text("Failed to fetch data: ${(foodRecommendations as ApiResponse.Error).message}")
+                CircularProgressIndicator()
                 Log.d("HomeScreen", "HomeContent: ${(foodRecommendations as ApiResponse.Error).message}")
             }
             else -> {
@@ -323,6 +368,42 @@ viewModel.getIdUser()?.let { viewModel.getFoodRecommendations(it, 10) }
 
 
 
+}
+
+
+
+
+@Composable
+fun ExitDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text("Konfirmasi Keluar")
+        },
+        text = {
+            Text("Apakah Anda yakin ingin keluar?")
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm()
+                    onDismiss()
+                }
+            ) {
+                Text("Ya")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss() }
+            ) {
+                Text("Tidak")
+            }
+        }
+    )
 }
 
 

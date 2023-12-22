@@ -1,6 +1,6 @@
 package com.example.senakapp.data.repository
 
-import com.example.senakapp.data.retrofit.DetailRecipesService
+import com.example.senakapp.data.retrofit.service.DetailRecipesService
 import javax.inject.Inject
 
 class DetailRecipesRepository @Inject constructor(private val detailRecipesService: DetailRecipesService){

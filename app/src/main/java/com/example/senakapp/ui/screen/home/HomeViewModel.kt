@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.senakapp.data.repository.HomeRepository
-import com.example.senakapp.data.retrofit.BiodataService
-import com.example.senakapp.data.retrofit.HomeService
+import com.example.senakapp.data.retrofit.service.BiodataService
+import com.example.senakapp.data.retrofit.service.HomeService
 import com.example.senakapp.model.FoodRecommendationsResponse
 import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.utils.ApiResponse
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val sharedPreferences: SharedPreferences,private val biodataService: BiodataService, private val homeService: HomeService, private val homeRepository: HomeRepository): ViewModel(){
+class HomeViewModel @Inject constructor(private val sharedPreferences: SharedPreferences, private val biodataService: BiodataService, private val homeService: HomeService, private val homeRepository: HomeRepository): ViewModel(){
 
 companion object
 {
@@ -25,11 +25,16 @@ companion object
 }
 
     fun getToken(): String? {
-        return sharedPreferences.getString("homeToken", null)
+        return sharedPreferences.getString("token", null)
     }
 
+    fun deleteToken() {
+        viewModelScope.launch {
+            sharedPreferences.edit().remove("token").apply()
+        }
+    }
     fun saveTokenAsync(token: String) {
-        sharedPreferences.edit().putString("homeToken", token).apply()
+        sharedPreferences.edit().putString("token", token).apply()
     }
 
     private val _foodRecommendations = MutableStateFlow<ApiResponse<FoodRecommendationsResponse>>(ApiResponse.Empty)

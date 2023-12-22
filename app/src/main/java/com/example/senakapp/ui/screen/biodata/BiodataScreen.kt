@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,7 @@ import com.example.senakapp.R
 import com.example.senakapp.model.biodata.BiodataRequest
 import com.example.senakapp.model.biodata.BiodataRequestResponse
 import com.example.senakapp.model.biodata.BiodataResponse
+import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.ui.screen.destinations.HomeScreenDestination
 import com.example.senakapp.ui.theme.signikaFont
 import com.example.senakapp.utils.ApiResponse
@@ -75,7 +77,7 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
+
 
     val account = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
 
@@ -88,6 +90,35 @@ fun BiodataContent(modifier: Modifier = Modifier, navigator: DestinationsNavigat
     var childWeight by remember { mutableStateOf(TextFieldValue("")) }
     var childHeight by remember { mutableStateOf(TextFieldValue("")) }
     var isButtonEnabled by remember { mutableStateOf(false) }
+    val verifyChildResult by viewModel.verifyChildResult.collectAsState()
+LaunchedEffect(Unit){
+    viewModel.verifyChild(account?.id.toString())
+}
+
+    when (verifyChildResult) {
+        is ApiResponse.Loading -> {
+            // Show loading indicator if needed
+        }
+        is ApiResponse.Success -> {
+            // Verification successful, navigate to home screen
+            navigator.navigate(HomeScreenDestination(), builder = {
+                popUpTo(HomeScreenDestination.baseRoute)
+            })
+            navigator?.popBackStack()
+        }
+        is ApiResponse.Error -> {
+            // Handle verification error if needed
+            val errorMessage = (verifyChildResult as ApiResponse.Error).message
+            Log.e("BiodataContent", "Verification Error: $errorMessage")
+        }
+        else -> {
+            // Handle other cases if needed
+        }
+    }
+
+
+
+
 
 
 
@@ -278,7 +309,9 @@ isButtonEnabled = name.text.isNotEmpty() && childWeight.text.isNotEmpty() && chi
                         popUpTo(HomeScreenDestination.baseRoute)
                     }
 
+
                 )
+                navigator?.popBackStack()
             }
             is ApiResponse.Error -> {
                 val errorMessage = (postBiodataResult as ApiResponse.Error).message

@@ -1,4 +1,4 @@
-package com.example.senakapp.data.retrofit
+package com.example.senakapp.data.retrofit.service
 
 import com.example.senakapp.model.auth.LoginResponse
 import com.example.senakapp.utils.ApiResponse

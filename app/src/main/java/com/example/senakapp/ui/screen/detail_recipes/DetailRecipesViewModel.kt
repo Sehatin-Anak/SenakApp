@@ -3,8 +3,7 @@ package com.example.senakapp.ui.screen.detail_recipes
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.senakapp.data.repository.DetailRecipesRepository
-import com.example.senakapp.data.retrofit.DetailRecipesService
+import com.example.senakapp.data.retrofit.service.DetailRecipesService
 import com.example.senakapp.model.detailrecipes.DetailRecipesResponse
 import com.example.senakapp.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel

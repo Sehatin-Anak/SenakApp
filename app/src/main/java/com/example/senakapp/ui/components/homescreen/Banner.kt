@@ -62,7 +62,7 @@ colors = CardDefaults.cardColors(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier.width(150.dp).padding(start = 4.dp, top = 4.dp),
+                    modifier = Modifier.width(200.dp).padding(start = 4.dp, top = 4.dp),
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
@@ -73,7 +73,8 @@ colors = CardDefaults.cardColors(),
                         modifier = Modifier.padding(top = 10.dp, start = 8.dp),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = signikaFont
+                        fontFamily = signikaFont,
+                        maxLines = 2
                     )
                     Text(
                         text = subtitle,
