@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,11 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.senakapp.R
-import com.example.senakapp.model.biodata.BiodataRequest
 import com.example.senakapp.model.biodata.UpdateBiodataRequest
 import com.example.senakapp.ui.theme.signikaFont
+import com.example.senakapp.utils.ApiResponse
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -47,17 +47,15 @@ fun EditProfileScreen(navigator: DestinationsNavigator) {
     val viewModel = hiltViewModel<EditProfileViewModel>()
     var age by remember { mutableStateOf(TextFieldValue("")) }
     var ageCategory by remember { mutableStateOf(TextFieldValue("")) }
+    val updateBiodata by viewModel.updateBiodata.collectAsState()
 
     var isButtonEnabled by remember { mutableStateOf(false) }
 
-    Column (
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-
-        ,
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-
 
 
         ) {
@@ -72,7 +70,7 @@ fun EditProfileScreen(navigator: DestinationsNavigator) {
             modifier = Modifier.padding(bottom = 16.dp, top = 32.dp)
         )
 
-        Image(painter = painterResource(id = R.drawable.anak ), contentDescription ="" )
+        Image(painter = painterResource(id = R.drawable.anak), contentDescription = "")
 
         Column(
             modifier = Modifier
@@ -116,25 +114,34 @@ fun EditProfileScreen(navigator: DestinationsNavigator) {
                     .padding(16.dp)
             )
 
-            isButtonEnabled = age.text.isNotEmpty()
+            isButtonEnabled = age.text.isNotEmpty() && if (age.text.length > 1) {
+                false
+            } else {
+                true
+            }
 
             Button(
 
                 onClick = {
 
-                    viewModel.putBiodata(
-                        viewModel.getIdUser() ?: "",
-                        UpdateBiodataRequest(
-                            age = age.text.toInt(),
-                            ageCategory = ageCategory.text.toInt(),
+                    val userId = viewModel.getIdUser()
+                    if (userId != null) {
+                        viewModel.putBiodata(
+                            userId,
+                            UpdateBiodataRequest(
+                                age = age.text.toInt(),
+                                ageCategory = ageCategory.text.toInt(),
+                            )
                         )
+                        Log.d("EditProfileScreen", "onClick: $userId")
+                        Log.d("EditProfileScreen", "onClick: ${age.text}")
+                        Log.d("EditProfileScreen", "onClick: ${ageCategory.text}")
 
-
-                    )
+                        navigator.popBackStack()
+                    } else {
+                        // Handle the case where userId is null, if needed
+                    }
                     navigator.popBackStack()
-
-
-
 
 
                 },
@@ -149,9 +156,28 @@ fun EditProfileScreen(navigator: DestinationsNavigator) {
             }
         }
 
+    }
+
+
+    when (updateBiodata) {
+        is ApiResponse.Loading -> {
+            Log.d("EditProfileScreen", "Loading")
+        }
+
+        is ApiResponse.Success -> {
+            Log.d("EditProfileScreen", "Success")
+        }
+
+        is ApiResponse.Error -> {
+            Log.d("EditProfileScreen", "${(updateBiodata as ApiResponse.Error).message}}")
+        }
+
+        is ApiResponse.Empty -> {
+            Log.d("EditProfileScreen", "Empty")
         }
 
     }
+}
 
 
 

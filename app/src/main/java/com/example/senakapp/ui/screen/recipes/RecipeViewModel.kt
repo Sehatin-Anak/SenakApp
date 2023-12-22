@@ -1,13 +1,11 @@
 package com.example.senakapp.ui.screen.recipes
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.senakapp.data.repository.HomeRepository
 import com.example.senakapp.data.retrofit.service.SearchService
 import com.example.senakapp.model.FoodRecommendationsResponse
-import com.example.senakapp.model.search.SearchResponse
 import com.example.senakapp.ui.screen.home.HomeViewModel
 import com.example.senakapp.utils.ApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel

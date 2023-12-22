@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.example.senakapp.model.DataItemArticles
 import com.example.senakapp.ui.theme.signikaFont
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
 @Destination

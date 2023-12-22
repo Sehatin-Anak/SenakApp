@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.senakapp.data.retrofit.service.BiodataService
-import com.example.senakapp.model.biodata.BiodataRequest
 import com.example.senakapp.model.biodata.BiodataRequestResponse
 import com.example.senakapp.model.biodata.UpdateBiodataRequest
 import com.example.senakapp.utils.ApiResponse
@@ -35,6 +34,7 @@ class EditProfileViewModel @Inject constructor(private val biodataService: Bioda
             try {
                 _updateBiodata.value = ApiResponse.Loading
 
+
                 // Panggil fungsi postBioChild dari BiodataService
                 val response = biodataService.putBioChild(userId, updateBiodataRequest)
 
@@ -47,6 +47,7 @@ class EditProfileViewModel @Inject constructor(private val biodataService: Bioda
                     // Respons tidak berhasil, simpan pesan kesalahan ke StateFlow
                     _updateBiodata.value =
                         ApiResponse.Error("Gagal mengirim update: ${response.message()}")
+                    Log.d("BiodataViewModel", "updateBiodataError: ${response.message()}")
                 }
             } catch (e: Exception) {
                 // Tangani kesalahan yang mungkin terjadi selama proses

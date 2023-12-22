@@ -4,7 +4,6 @@ package com.example.senakapp.ui.screen.auth
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.service.autofill.UserData
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,14 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.DisposableEffectScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.senakapp.R
-import com.example.senakapp.model.auth.LoginResponse
 import com.example.senakapp.model.biodata.VerifyChildResponse
 import com.example.senakapp.ui.screen.destinations.AuthScreenDestination
 import com.example.senakapp.ui.screen.destinations.BiodataScreenDestination
@@ -53,10 +47,6 @@ import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.popUpTo
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.runBlocking
 
 @RootNavGraph(start = true)
 @Destination
@@ -74,7 +64,6 @@ fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator)
     val viewModel = hiltViewModel<AuthViewModel>()
 
 
-
     val lastToken = remember { viewModel.getToken() }
 
     LaunchedEffect(Unit) {
@@ -84,18 +73,11 @@ fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator)
         }
         viewModel.verifyChild(viewModel.getIdUser() ?: "Error get id")
 
+        Log.d("AuthContent", "AuthContent: ${viewModel.getIdUser()}")
+
 
 
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -104,16 +86,16 @@ fun AuthContent(modifier: Modifier = Modifier, navigator: DestinationsNavigator)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
-Image(
-    painter = painterResource(id = R.drawable.senak_logo),
-    contentDescription ="Senak-Logo",
-    modifier = Modifier
+        ) {
+        Image(
+            painter = painterResource(id = R.drawable.senak_logo),
+            contentDescription = "Senak-Logo",
+            modifier = Modifier
 
-        .padding(bottom = 64.dp, top = 64.dp)
+                .padding(bottom = 64.dp, top = 64.dp)
 
 
-)
+        )
 
         Spacer(modifier = Modifier.padding(12.dp))
 
@@ -122,54 +104,53 @@ Image(
             image = R.drawable.google_logo,
             navigator = navigator
 
-            )
+        )
         val verifyChildResult by viewModel.verifyChildResult.collectAsState()
         val loginResult by viewModel.loginResult.collectAsState()
 
+        Log.d("AuthContent", "verifyChild: ${verifyChildResult} ")
+        Log.d("AuthContent", "verifyLogin ${loginResult}")
 
 
-            if (loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Success) {
-                // Navigasi ke HomeScreen jika berhasil masuk dan verifikasi anak berhasil
-
-
-
-
-                Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
-                Log.d("AuthContent", "Login and verify success: ${(verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data}")
-                navigator.navigate(HomeScreenDestination())
+        when {
+            loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Success -> {
+                // Jika login sukses dan verify child sukses, navigasi ke HomeScreen
                 navigator.popBackStack()
+                navigator.navigate(HomeScreenDestination)
 
 
-                Log.d("AuthContent", "Login and verify success: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
-            } else if (verifyChildResult is ApiResponse.Error && loginResult is ApiResponse.Success) {
-                // Navigasi ke BiodataScreen jika verifikasi anak gagal
-                navigator.navigate(BiodataScreenDestination(),
-
-
-
-
-                )
-                navigator.popBackStack()
-                Log.d("AuthContent", "Login success and verify child error: ${(verifyChildResult as ApiResponse.Error).message}")
-                Log.d("AuthContent", "Login success and verify child error: ${(loginResult as ApiResponse.Success<LoginResponse>).data}")
-
-
-
-                Log.e("AuthContent", "Verify child error: ${(verifyChildResult as ApiResponse.Error).message}")
-            } else if ( loginResult is ApiResponse.Error ) {
-                // Logika tambahan jika diperlukan ketika kondisi tidak terpenuhi
-
-                navigator.navigate(AuthScreenDestination()) {
-                    popUpTo(AuthScreenDestination.baseRoute) {
-                        inclusive = true
-                    }
-                }
-
-                navigator.popBackStack()
-                Log.d("AuthContent", "Login loading: ${loginResult is ApiResponse.Loading}")
+                Log.d("AuthContent", "Harusnya nav ke home: ${verifyChildResult} ")
             }
 
+            loginResult is ApiResponse.Error && verifyChildResult is ApiResponse.Success -> {
+                // Jika login gagal dan verify child sukses, navigasi ke AuthScreen
+                navigator.popBackStack()
+                navigator.navigate(AuthScreenDestination)
+
+                Log.d("AuthContent", "Harusnya nav ke auth: ${verifyChildResult} ")
+            }
+
+            loginResult is ApiResponse.Success && verifyChildResult is ApiResponse.Error -> {
+                // Jika login sukses dan verify child gagal, navigasi ke BiodataScreen
+                navigator.popBackStack()
+                navigator.navigate(BiodataScreenDestination)
+
+
+                Log.d("AuthContent", "Harusnya nav ke bio: ${verifyChildResult} ")
+            }
+
+            loginResult is ApiResponse.Error && verifyChildResult is ApiResponse.Error -> {
+                // Jika login gagal dan verify child gagal, navigasi ke AuthScreen
+                navigator.popBackStack()
+                navigator?.navigate(AuthScreenDestination)
+
+            }
+            // Tambahkan logika lain sesuai kebutuhan
+            else -> {
+                // Handle kasus lain jika diperlukan
+            }
         }
+    }
 
 
     }
@@ -182,128 +163,126 @@ Image(
 
 
 
-@SuppressLint("RestrictedApi")
-@Composable
-fun AuthCard(title: String, image: Int, modifier: Modifier = Modifier, navigator: DestinationsNavigator) {
-    val viewModel = hiltViewModel<AuthViewModel>()
 
-    val verifyChildResult by viewModel.verifyChildResult.collectAsState(initial = ApiResponse.Empty)
-    LaunchedEffect(Unit){
-        viewModel.verifyChild(viewModel.getIdUser() ?: "Error get id")
-    }
+    @Composable
+    fun AuthCard(
+        title: String,
+        image: Int,
+        modifier: Modifier = Modifier,
+        navigator: DestinationsNavigator
+    ) {
+        val viewModel = hiltViewModel<AuthViewModel>()
 
-    when(verifyChildResult){
-        is ApiResponse.Loading -> {
-            // Tampilkan loading indicator jika diperlukan
+        val verifyChildResult by viewModel.verifyChildResult.collectAsState(initial = ApiResponse.Empty)
+        LaunchedEffect(Unit) {
+            viewModel.verifyChild(viewModel.getIdUser() ?: "Error get id")
         }
-        is ApiResponse.Success -> {
-            // Mendapatkan data hasil pengambilan
-            val response = (verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data
 
-            // Memanggil UI dengan data yang diperoleh
-            Log.d("AuthCard", "Verify Success: ${response}")
+        when (verifyChildResult) {
+            is ApiResponse.Loading -> {
+                // Tampilkan loading indicator jika diperlukan
+            }
+
+            is ApiResponse.Success -> {
+                // Mendapatkan data hasil pengambilan
+                val response = (verifyChildResult as ApiResponse.Success<VerifyChildResponse>).data
+
+                // Memanggil UI dengan data yang diperoleh
+                Log.d("AuthCard", "Verify Success: ${response}")
+            }
+
+            is ApiResponse.Error -> {
+                // Tangani kesalahan jika diperlukan
+                val errorMessage = (verifyChildResult as ApiResponse.Error).message
+                // Tampilkan pesan kesalahan ke pengguna atau lakukan tindakan yang sesuai
+            }
+            // tambahkan blok lain jika diperlukan
+            else -> {
+                Log.d("AuthCard", "AuthCard: ${verifyChildResult} ")
+            }
         }
-        is ApiResponse.Error -> {
-            // Tangani kesalahan jika diperlukan
-            val errorMessage = (verifyChildResult as ApiResponse.Error).message
-            // Tampilkan pesan kesalahan ke pengguna atau lakukan tindakan yang sesuai
-        }
-        // tambahkan blok lain jika diperlukan
-        else -> {
-            Log.d("AuthCard", "AuthCard: ${verifyChildResult} ")
-        }
-    }
 
-    val context = LocalContext.current
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(context.getString(R.string.server_client_id))
-        .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-        .requestProfile()
-        .requestId()
-        .requestServerAuthCode(context.getString(R.string.server_client_id), true)
-        .requestEmail()
-        .build()
+        val context = LocalContext.current
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.server_client_id))
+            .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
+            .requestProfile()
+            .requestId()
+            .requestServerAuthCode(context.getString(R.string.server_client_id), true)
+            .requestEmail()
+            .build()
 
-    val mGsoClient = GoogleSignIn.getClient(context, gso)
+        val mGsoClient = GoogleSignIn.getClient(context, gso)
 
 
-
-    val signInLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-                val data: Intent? = result.data
-                if (data != null && result.resultCode == Activity.RESULT_OK) {
-                    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                    handleSignInResult(task, navigator)
-                    viewModel.saveTokenAsync(task.result?.idToken.toString())
-                    viewModel.saveIdUserAsync(task.result?.id.toString())
-                    navigator.navigate(HomeScreenDestination(),
-                        builder = {
-                            popUpTo(HomeScreenDestination.baseRoute) {
-                                inclusive = true
-                            }
-                        }
-
-                    )
-
-                    if (verifyChildResult is ApiResponse.Success<VerifyChildResponse>){
+        val signInLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+                    val data: Intent? = result.data
+                    if (data != null && result.resultCode == Activity.RESULT_OK) {
+                        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                        handleSignInResult(task, navigator)
+                        viewModel.saveTokenAsync(task.result?.idToken.toString())
+                        viewModel.saveIdUserAsync(task.result?.id.toString())
                         navigator.navigate(HomeScreenDestination(),
-                            builder = {
-                                popUpTo(HomeScreenDestination.baseRoute) {
-                                    inclusive = true
+                            navigator.popBackStack()
+
+                        )
+
+                        if (verifyChildResult is ApiResponse.Success<VerifyChildResponse>) {
+                            navigator.navigate(HomeScreenDestination(),
+                                builder = {
+                                    navigator.popBackStack()
                                 }
-                            }
 
                             )
-                        navigator.popBackStack()
+                            navigator.popBackStack()
+                        }
+
+
                     }
-
-
-
-
+                } else {
+                    Log.d("YourActivity", "signInResult:failed code=" + result.resultCode)
                 }
-            } else {
-                Log.d("YourActivity", "signInResult:failed code=" + result.resultCode)
             }
-        }
 
 
 
 
-    OutlinedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(start = 12.dp, end = 12.dp)
-            .clickable {
-                val signInIntent = mGsoClient.signInIntent
-                signInLauncher.launch(signInIntent)
-            }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-
-            )
-        {
-            Image(
-                painter = painterResource(id = image),
-                contentDescription = "Auth Image",
+        OutlinedCard(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(start = 12.dp, end = 12.dp)
+                .clickable {
+                    val signInIntent = mGsoClient.signInIntent
+                    signInLauncher.launch(signInIntent)
+                }
+        ) {
+            Row(
                 modifier = Modifier
-                    .size(60.dp)
-                    .padding(4.dp)
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
 
-            Text(text = title)
+                )
+            {
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = "Auth Image",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .padding(4.dp)
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                Text(text = title)
+            }
+
         }
+
 
     }
-
-
-}
 
 
 

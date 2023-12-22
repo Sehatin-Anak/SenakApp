@@ -2,7 +2,6 @@ package com.example.senakapp.data.retrofit.service
 
 import com.example.senakapp.model.biodata.BiodataRequest
 import com.example.senakapp.model.biodata.BiodataRequestResponse
-import com.example.senakapp.model.biodata.BiodataResponse
 import com.example.senakapp.model.biodata.UpdateBiodataRequest
 import com.example.senakapp.model.biodata.VerifyChildResponse
 import retrofit2.Response
@@ -25,12 +24,12 @@ interface BiodataService {
     ): Response<BiodataRequestResponse> // Ganti dengan tipe data respons yang sesuai
 
 
-    @PUT("/user/:id/bioChild")
+    @PUT("/user/{userId}/bioChild")
     suspend fun putBioChild(
-        @Path("id") userId: String,
+        @Path("userId") userId: String,
         @Body updateBiodataRequest: UpdateBiodataRequest
-
     ): Response<BiodataRequestResponse>
+
 
 
 
